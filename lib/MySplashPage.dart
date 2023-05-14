@@ -40,7 +40,7 @@ class _MySplashPageState extends State<MySplashPage> {
               'assets/logo.png',
               width: 100,
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 30),
             Loading()
           ],
         ),

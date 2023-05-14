@@ -1,5 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:smartlink/config.dart';
+
+import 'IntroductionPage.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -9,6 +12,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String userName = SmartLink.auth.currentUser?.displayName ?? "User";
+  String userEmail = SmartLink.auth.currentUser?.email ?? "Use Emailr";
+  String userPhoto =
+      SmartLink.auth.currentUser?.photoURL ?? "https://picsum.photos/200/400";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,17 +23,36 @@ class _MyHomePageState extends State<MyHomePage> {
           title: const Text("SmartLink"),
         ),
         drawer: Drawer(
-          child: Column(
-            children: [
-              DrawerHeader(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              UserAccountsDrawerHeader(
+                accountName: Text(
+                  userName,
+                  style: const TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
+                accountEmail: Text(userEmail),
+                currentAccountPicture: CircleAvatar(
+                  backgroundImage: NetworkImage(userPhoto),
+                ),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+              const Divider(),
 
-                  padding: EdgeInsets.all(0),
-                  child: Container(
-                    color: Colors.purple,
-                  )),
               ListTile(
-                title: Text("Settings"),
-              )
+                leading: const Icon(Icons.logout),
+                title: const Text('Sign out'),
+                onTap: () {
+                  SmartLink.auth.signOut();
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (_) => const IntroductionPage()),
+                          (route) => false);
+                },
+              ),
             ],
           ),
         ),
