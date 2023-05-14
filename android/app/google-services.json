@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "504400761702",
+    "project_id": "smartlink-pro",
+    "storage_bucket": "smartlink-pro.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:504400761702:android:155664fe0aafd6fca92ea7",
+        "android_client_info": {
+          "package_name": "com.mahdiabbasi.kan_q.kan_q"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "504400761702-rv4enme28n803e2f5j9vb8h08p229aqs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIIO_HwRMwRt_j_TYu_s2NjQ0bufHyv6o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "504400761702-rv4enme28n803e2f5j9vb8h08p229aqs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "504400761702-8v5eseidg9n4rrbupao6ilc1c6562ubb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mahdiabbasi.kanq.kanq"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:504400761702:android:38e1f05dfdc8bb20a92ea7",
+        "android_client_info": {
+          "package_name": "com.smartlink.app.smartlink"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "504400761702-rv4enme28n803e2f5j9vb8h08p229aqs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIIO_HwRMwRt_j_TYu_s2NjQ0bufHyv6o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "504400761702-rv4enme28n803e2f5j9vb8h08p229aqs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "504400761702-8v5eseidg9n4rrbupao6ilc1c6562ubb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mahdiabbasi.kanq.kanq"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
