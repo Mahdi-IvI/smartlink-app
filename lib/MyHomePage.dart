@@ -1,12 +1,12 @@
 
 import 'package:flutter/material.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:smartlink/config.dart';
 
 import 'IntroductionPage.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -57,33 +57,47 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         body: Padding(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: GridView.count(
             crossAxisCount: 2,
             crossAxisSpacing: 20,
             mainAxisSpacing: 20,
-            children: const [
-              GradeListItem(
+            children:  [
+              const GradeListItem(
                 icon: Icons.chat,
                 title: 'Group Chat',
                 subtitle: 'Join the conversation',
               ),
-              GradeListItem(
+              const GradeListItem(
                 icon: Icons.info,
                 title: 'Ticket',
                 subtitle: 'Get your event ticket',
               ),
-              GradeListItem(
+              const GradeListItem(
                 icon: Icons.article,
                 title: 'News',
                 subtitle: 'Stay up-to-date',
               ),
-              GradeListItem(
-                icon: Icons.lock,
-                title: 'Door Opener',
-                subtitle: 'Unlock the door',
+              InkWell(
+                child: const GradeListItem(
+                  icon: Icons.lock,
+                  title: 'Door Opener',
+                  subtitle: 'Unlock the door',
+                ),
+                onTap: ()async{
+                  LocalAuthentication localAuth = LocalAuthentication();
+                  if(await localAuth.canCheckBiometrics){
+                    bool didAuth= await localAuth.authenticate(localizedReason: "Please use finger print to open the door");
+                    if(didAuth){
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("worked")));
+                    }else{
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("did not work")));
+
+                    }
+                  }
+                },
               ),
-              GradeListItem(
+              const GradeListItem(
                 icon: Icons.contacts,
                 title: 'Contacts',
                 subtitle: 'Find your contacts',
@@ -98,6 +112,7 @@ class GradeListItem extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
+
 
   const GradeListItem({
     Key? key,
