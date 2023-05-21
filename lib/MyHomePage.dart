@@ -13,7 +13,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String userName = SmartLink.auth.currentUser?.displayName ?? "User";
-  String userEmail = SmartLink.auth.currentUser?.email ?? "Use Emailr";
+  String userEmail = SmartLink.auth.currentUser?.email ?? "User Email";
   String userPhoto =
       SmartLink.auth.currentUser?.photoURL ?? "https://picsum.photos/200/400";
   @override

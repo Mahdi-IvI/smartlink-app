@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:smartlink/AvailablePlaces.dart';
 import 'package:smartlink/config.dart';
 
 import 'Loading.dart';
@@ -20,76 +21,13 @@ class IntroductionPage extends StatefulWidget {
 class _IntroductionPageState extends State<IntroductionPage> {
   final introKey = GlobalKey<IntroductionScreenState>();
 
-  bool _loading = false;
+
 
   void _onIntroEnd(context) {
-    setState(() {
-      _loading = true;
-    });
-    signInWithGoogle();
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>AvailablePlaces()));
   }
 
-  void signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication? googleAuth =
-    await googleUser?.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-    await SmartLink.auth.signInWithCredential(credential).then((value) async {
-      User? user = SmartLink.auth.currentUser;
-      if (user != null) {
-        await SmartLink.fireStore
-            .collection(SmartLink.userCollection)
-            .doc(user.uid)
-            .get()
-            .then((DocumentSnapshot snapshot) async {
-          if (snapshot.exists) {
-            await SmartLink.fireStore
-                .collection(SmartLink.userCollection)
-                .doc(user.uid)
-                .update({
-              SmartLink.userUID: user.uid,
-              SmartLink.userEmail: user.email,
-              SmartLink.userName: user.displayName,
-              SmartLink.userImageUrl: user.photoURL
-            }).whenComplete(() {
 
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (_) => const MyHomePage()),
-                        (route) => false);
-
-            });
-          } else {
-            await SmartLink.fireStore
-                .collection(SmartLink.userCollection)
-                .doc(user.uid)
-                .set({
-              SmartLink.userUID: user.uid,
-              SmartLink.userEmail: user.email,
-              SmartLink.userName: user.displayName,
-              SmartLink.userImageUrl: user.photoURL,
-            }).then((value) {
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                      builder: (_) => const MyHomePage()),
-                      (route) => false);
-            });
-          }
-        });
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text(
-              'Please try again',
-              textDirection: TextDirection.rtl,
-            )));
-      }
-    });
-    setState(() {
-      _loading = false;
-    });
-  }
 
   Widget _buildImage(String assetName, [double width = 200]) {
     return Image.asset(
@@ -126,10 +64,8 @@ class _IntroductionPageState extends State<IntroductionPage> {
         width: double.infinity,
         height: 60,
         child: ElevatedButton(
-          child: _loading
-              ? const WhiteLoading()
-              : const Text(
-            'Sign In With Google',
+          child: const Text(
+            'Show Available Places',
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
           ),
           onPressed: () => _onIntroEnd(context),
@@ -159,9 +95,9 @@ class _IntroductionPageState extends State<IntroductionPage> {
       showSkipButton: false,
       skipOrBackFlex: 0,
       nextFlex: 0,
-      showBackButton: true,
+      showBackButton: false,
       showDoneButton: false,
-      showNextButton: true,
+      showNextButton: false,
       back: const Icon(Icons.arrow_back),
       skip: const Text('Skip', style: TextStyle(fontWeight: FontWeight.w600)),
       next: const Icon(Icons.arrow_forward),
