@@ -15,7 +15,6 @@ class MySplashPage extends StatefulWidget {
 class _MySplashPageState extends State<MySplashPage> {
   @override
   void initState() {
-    SmartLink.auth.signOut();
     super.initState();
     Future.delayed(const Duration(seconds: 2), () {
       if (SmartLink.auth.currentUser == null) {

@@ -33,6 +33,9 @@ class _SignPageState extends State<SignPage> {
           const SizedBox(height: kToolbarHeight/2,),
           InkWell(
             onTap: (){
+              setState(() {
+                _loading = true;
+              });
               signInWithGoogle();
             },
             child: Container(
@@ -43,7 +46,7 @@ class _SignPageState extends State<SignPage> {
                 border: Border.all(color: Colors.purple, width: 2)
               ),
               child: _loading
-                  ? const WhiteLoading()
+                  ? const Loading()
                   : const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -60,7 +63,7 @@ class _SignPageState extends State<SignPage> {
               border: Border.all(color: Colors.purple, width: 2)
             ),
             child: _loading
-                ? const WhiteLoading()
+                ? const Loading()
                 : const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
