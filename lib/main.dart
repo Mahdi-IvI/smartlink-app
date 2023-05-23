@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:smartlink/AvailablePlaces.dart';
 import 'package:smartlink/config.dart';
 
 import 'MySplashPage.dart';
@@ -28,8 +27,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Smart Link',
       theme: ThemeData(
-        primarySwatch: Colors.purple,
-      ),
+        primaryColor: const Color(0xFF20063E),
+        appBarTheme: const AppBarTheme(
+          color: Color(0xFF20063E), // Set your desired color
+        ),
+    ),
       home: const MySplashPage(),
     );
   }

@@ -1,14 +1,8 @@
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:smartlink/AvailablePlaces.dart';
-import 'package:smartlink/config.dart';
-
-import 'Loading.dart';
+import 'package:smartlink/SignPage.dart';
 import 'MyHomePage.dart';
 
 class IntroductionPage extends StatefulWidget {
@@ -24,7 +18,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
 
 
   void _onIntroEnd(context) {
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>AvailablePlaces()));
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>SignPage()));
   }
 
 
@@ -75,19 +69,23 @@ class _IntroductionPageState extends State<IntroductionPage> {
         PageViewModel(
           title: "Welcome to SmartLink!",
           body:
-          "Experience the future of guest service management with our cutting-edge app. From opening your hotel room door to contacting the hotel management, SmartStay puts convenience at your fingertips. Enjoy a seamless and personalized stay with us.",
+          "Experience the future of guest service management with our cutting-edge app."
+              " From opening your hotel room door to contacting the hotel management, SmartStay puts convenience at your fingertips. Enjoy a seamless and personalized stay with us.",
           image: _buildImage('User flow-pana.png',150),
           decoration: pageDecoration,
         ),
         PageViewModel(
           title: "Step into a new era of hospitality with SmartLink!",
-          body: "Discover the power of our smart guest service management app that revolutionizes your hotel experience. Unlock your room door with a simple tap, and effortlessly connect with the hotel management for any assistance you need. Embrace a hassle-free stay with DoorLink.",
+          body: "Discover the power of our smart guest service management app that revolutionizes your hotel"
+              " experience. Unlock your room door with a simple tap, and effortlessly connect with the hotel management for any assistance you need. Embrace a hassle-free stay with DoorLink.",
           image: _buildImage('Prototyping process-bro.png',150),
           decoration: pageDecoration,
         ),
         PageViewModel(
           title: "Discover the future of guest service with our innovative app!",
-          body: "Say goodbye to traditional keycards and welcome a more intuitive way to access your room. Additionally, enjoy direct communication with our responsive hotel management team, ensuring your needs are met promptly. Experience hospitality reimagined.",
+          body: "Say goodbye to traditional keycards and welcome a more intuitive way to access your room."
+              " Additionally, enjoy direct communication with our responsive hotel management team, "
+              "ensuring your needs are met promptly. Experience hospitality reimagined.",
           image: _buildImage('Messaging-amico.png',150),
           decoration: pageDecoration,
         ),
