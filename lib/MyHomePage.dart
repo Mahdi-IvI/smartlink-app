@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:smartlink/Loading.dart';
@@ -15,7 +16,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool hasApartment = true;
   String userName = SmartLink.auth.currentUser?.displayName ?? "User";
   String userEmail = SmartLink.auth.currentUser?.email ?? "User Email";
   String userPhoto =
@@ -46,17 +46,23 @@ class _MyHomePageState extends State<MyHomePage> {
       stream: getHotelStreamFromFirestore(),
       builder: (BuildContext context, snapshot) {
         if (snapshot.hasError) {
-          return Text('Something went wrong');
+          return const Text('Something went wrong');
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Loading();
+          return const Loading();
         }
 
         List<UsersPlace> usersPlaceId = snapshot.data!;
         List<String> placesId = usersPlaceId.map((hotel) => hotel.id).toList();
+        if (kDebugMode) {
+          print(placesId);
+          print(usersPlaceId);
+          print(SmartLink.auth.currentUser!.email);
+        }
 
-        return Scaffold(
+        return
+        Scaffold(
             appBar: AppBar(
               title: Text(snapshot.hasData ? "SmartLink" : "Available Places"),
             ),
@@ -79,18 +85,20 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
+                  usersPlaceId.isNotEmpty?
                   StreamBuilder<QuerySnapshot>(
                     stream: SmartLink.fireStore.collection("hotels")
                         .where(FieldPath.documentId, whereIn: placesId)
                         .snapshots(),
+
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> hotelsSnapshot) {
                       if (hotelsSnapshot.hasError) {
-                        return Text('Something went wrong');
+                        return const Text('Something went wrong');
                       }
 
                       if (hotelsSnapshot.connectionState == ConnectionState.waiting) {
-                        return Text("Loading");
+                        return const Text("Loading");
                       }
                       return ListView(
                         shrinkWrap: true,
@@ -105,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         }).toList(),
                       );
                     },
-                  ),
+                  ):const SizedBox(),
                   ListTile(
                     leading: const Icon(Icons.logout),
                     title: const Text('Sign out'),
@@ -120,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
-            body: hasApartment
+            body: usersPlaceId.isNotEmpty
                 ? Padding(
                     padding: const EdgeInsets.all(20),
                     child: GridView.count(
@@ -177,160 +185,145 @@ class _MyHomePageState extends State<MyHomePage> {
                   )
                 : ListView(
                     children: [
-                      Container(
-                        child: Card(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          child: Container(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Image.network(
-                                  "https://cf.bstatic.com/xdata/images/hotel/max1024x768/370564672.jpg?k=4f37af06c05a6f5dfc7db5e8e71d2eb66cae6eec36af7a4a4cd7a25d65ceb941&o=&hp=1",
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    padding: const EdgeInsets.all(12),
-                                    child: const Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Hotel 1",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text("Description"),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
+                      Card(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Image.network(
+                              "https://cf.bstatic.com/xdata/images/hotel/max1024x768/370564672.jpg?k=4f37af06c05a6f5dfc7db5e8e71d2eb66cae6eec36af7a4a4cd7a25d65ceb941&o=&hp=1",
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
                             ),
-                          ),
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                child: const Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Hotel 1",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text("Description"),
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
                         ),
                       ),
-                      Container(
-                        child: Card(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          child: Container(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Image.network(
-                                  "https://cf.bstatic.com/xdata/images/hotel/max1024x768/370564672.jpg?k=4f37af06c05a6f5dfc7db5e8e71d2eb66cae6eec36af7a4a4cd7a25d65ceb941&o=&hp=1",
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    padding: const EdgeInsets.all(12),
-                                    child: const Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Hotel 1",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text("Description"),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
+                      Card(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Image.network(
+                              "https://cf.bstatic.com/xdata/images/hotel/max1024x768/370564672.jpg?k=4f37af06c05a6f5dfc7db5e8e71d2eb66cae6eec36af7a4a4cd7a25d65ceb941&o=&hp=1",
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
                             ),
-                          ),
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                child: const Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Hotel 1",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text("Description"),
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
                         ),
                       ),
-                      Container(
-                        child: Card(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          child: Container(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Image.network(
-                                  "https://cf.bstatic.com/xdata/images/hotel/max1024x768/370564672.jpg?k=4f37af06c05a6f5dfc7db5e8e71d2eb66cae6eec36af7a4a4cd7a25d65ceb941&o=&hp=1",
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    padding: const EdgeInsets.all(12),
-                                    child: const Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Hotel 1",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text("Description"),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
+                      Card(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Image.network(
+                              "https://cf.bstatic.com/xdata/images/hotel/max1024x768/370564672.jpg?k=4f37af06c05a6f5dfc7db5e8e71d2eb66cae6eec36af7a4a4cd7a25d65ceb941&o=&hp=1",
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
                             ),
-                          ),
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                child: const Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Hotel 1",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text("Description"),
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
                         ),
                       ),
-                      Container(
-                        child: Card(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          child: Container(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Image.network(
-                                  "https://cf.bstatic.com/xdata/images/hotel/max1024x768/370564672.jpg?k=4f37af06c05a6f5dfc7db5e8e71d2eb66cae6eec36af7a4a4cd7a25d65ceb941&o=&hp=1",
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    padding: const EdgeInsets.all(12),
-                                    child: const Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Hotel 1",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text("Description"),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
+                      Card(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Image.network(
+                              "https://cf.bstatic.com/xdata/images/hotel/max1024x768/370564672.jpg?k=4f37af06c05a6f5dfc7db5e8e71d2eb66cae6eec36af7a4a4cd7a25d65ceb941&o=&hp=1",
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
                             ),
-                          ),
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                child: const Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Hotel 1",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text("Description"),
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
                         ),
                       )
                     ],
                   ));
+
       },
     );
   }
