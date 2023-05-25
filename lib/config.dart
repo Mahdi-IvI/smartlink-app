@@ -20,7 +20,12 @@ class SmartLink{
   static String userCollection = "users";
   static String userImageUrl = "userImageUrl";
 
-
+  static const String groupChatCollection = "groupChat";
+  static const String messageText = "messageText";
+  static const String messageSender = "messageSender";
+  static const String messageGetter = "messageGetter";
+  static const String messageDate = "messageDate";
+  static const String messageRead = "messageRead";
 
 
 }
