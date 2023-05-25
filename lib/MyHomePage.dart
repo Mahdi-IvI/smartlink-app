@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:smartlink/ChatPage.dart';
 import 'package:smartlink/Loading.dart';
 import 'package:smartlink/config.dart';
 import 'package:smartlink/models/usersPlace.dart';
@@ -156,10 +157,17 @@ class _MyHomePageState extends State<MyHomePage> {
                           crossAxisSpacing: 20,
                           mainAxisSpacing: 20,
                           children: [
-                            const GradeListItem(
-                              icon: Icons.chat,
-                              title: 'Group Chat',
-                              subtitle: 'Join the conversation',
+                            InkWell(
+                              onTap: (){
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>
+                                    ChatPage(placeId: hotelsSnapshot.data!.first.placeId,
+                                        placeName: hotelsSnapshot.data!.first.placeName)));
+                              },
+                              child: const GradeListItem(
+                                icon: Icons.chat,
+                                title: 'Group Chat',
+                                subtitle: 'Join the conversation',
+                              ),
                             ),
                             const GradeListItem(
                               icon: Icons.info,
