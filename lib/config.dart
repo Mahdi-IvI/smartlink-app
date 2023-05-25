@@ -11,6 +11,7 @@ class SmartLink{
   static late FirebaseApp firebaseApp;
   static late SharedPreferences sharedPreferences;
   static const themeStatus = "themeStatus";
+  static const lastUsedRoomID = "lastUsedRoomID";
 
 
   static const String userUID = 'userUID';

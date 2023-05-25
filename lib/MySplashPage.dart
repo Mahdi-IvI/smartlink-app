@@ -23,7 +23,7 @@ class _MySplashPageState extends State<MySplashPage> {
             (route) => false);
       } else {
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (_) => const MyHomePage()),
+            MaterialPageRoute(builder: (_) => MyHomePage()),
             (route) => false);
       }
     });
