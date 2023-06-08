@@ -3,12 +3,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:smartlink/ChatPage.dart';
-import 'package:smartlink/Loading.dart';
+import 'package:smartlink/loading.dart';
 import 'package:smartlink/config.dart';
-import 'package:smartlink/models/usersPlace.dart';
+import 'package:smartlink/models/available_place_model.dart';
+import 'package:smartlink/my_access_screen.dart';
 
-import 'IntroductionPage.dart';
-import 'models/place.dart';
+import 'my_introduction_screen.dart';
+import 'models/place_model.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -21,22 +22,43 @@ class _MyHomePageState extends State<MyHomePage> {
   String userName = SmartLink.auth.currentUser?.displayName ?? "User";
   String userEmail = SmartLink.auth.currentUser?.email ?? "User Email";
   String userPhoto =
-      SmartLink.auth.currentUser?.photoURL ?? "https://picsum.photos/200/400";
+      SmartLink.auth.currentUser?.photoURL ?? SmartLink.logoAddress;
 
-  Stream<List<UsersPlace>> getHotelStreamFromFirestore() {
+  Stream<List<AvailablePlaceModel>> getAvailablePlaces() {
     return SmartLink.fireStore
-        .collection("users")
+        .collection(SmartLink.userCollection)
         .doc(SmartLink.auth.currentUser!.uid)
-        .collection("access")
-        .where("endTime", isGreaterThanOrEqualTo: DateTime.now())
+        .collection(SmartLink.userAccessCollection)
+        .where(SmartLink.endTime, isGreaterThanOrEqualTo: DateTime.now())
         .snapshots()
         .map((snapshot) {
       return snapshot.docs.map((doc) {
-        // Convert each document snapshot into a Hotel object
-        return UsersPlace(
-          id: doc['hotelId'],
-          startTime: doc['startTime'],
-          endTime: doc['endTime'],
+        return AvailablePlaceModel(
+          id: doc.id,
+          placeId: doc[SmartLink.placeId],
+          startTime: doc[SmartLink.startTime],
+          endTime: doc[SmartLink.endTime],
+        );
+      }).toList();
+    });
+  }
+
+  Stream<List<PlaceModel>> getPlaces() {
+    return SmartLink.fireStore
+        .collection(SmartLink.placesCollection)
+        .where(SmartLink.placeShowPublic, isEqualTo: true)
+        .snapshots()
+        .map((placesSnapshot) {
+      return placesSnapshot.docs.map((place) {
+        return PlaceModel(
+          id: place.id,
+          name: place[SmartLink.placeName],
+          stars: place[SmartLink.placeStars],
+          showPublic: place[SmartLink.placeShowPublic],
+          address: place[SmartLink.placeAddress],
+          description: place[SmartLink.placeDescription],
+          images: place[SmartLink.placeImages],
+          postcode: place[SmartLink.placePostcode],
         );
       }).toList();
     });
@@ -44,18 +66,32 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<UsersPlace>>(
-      stream: getHotelStreamFromFirestore(),
-      builder: (BuildContext context, snapshot) {
-        if (snapshot.hasError) {
-          return const Text('Something went wrong!!!');
+    return StreamBuilder<List<AvailablePlaceModel>>(
+      stream: getAvailablePlaces(),
+      builder: (BuildContext context, availablePlacesSnapshot) {
+        if (availablePlacesSnapshot.hasError) {
+          return Scaffold(
+              appBar: AppBar(
+                title: const Text(SmartLink.appName),
+              ),
+              body: const Center(
+                child: Text(SmartLink.errorMessage),
+              ));
         }
 
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Loading();
+        if (availablePlacesSnapshot.connectionState ==
+            ConnectionState.waiting) {
+          return Scaffold(
+              appBar: AppBar(
+                title: const Text(SmartLink.appName),
+              ),
+              body: const Center(
+                child: Loading(),
+              ));
         }
 
-        List<UsersPlace> usersPlaceId = snapshot.data!.where((hotel) {
+        List<AvailablePlaceModel> userPlacesId =
+            availablePlacesSnapshot.data!.where((hotel) {
           DateTime hotelStartTime = hotel.startTime
               .toDate(); // Assuming 'startTime' is a DateTime field in the Hotel class
           DateTime hotelEndTime = hotel.endTime
@@ -64,90 +100,107 @@ class _MyHomePageState extends State<MyHomePage> {
           return hotelStartTime.isBefore(DateTime.now()) &&
               hotelEndTime.isAfter(DateTime.now());
         }).toList();
-        List<String> placesId = usersPlaceId.map((hotel) => hotel.id).toList();
+        List<String> placesId =
+            userPlacesId.map((place) => place.placeId).toList();
         if (kDebugMode) {
           print(placesId);
-          print(usersPlaceId);
+          print(userPlacesId);
           print(SmartLink.auth.currentUser!.email);
         }
-        Stream<List<Place>> getPlacesStream() {
+        Stream<List<PlaceModel>> getPlacesStream() {
           return SmartLink.fireStore
-              .collection("hotels")
+              .collection(SmartLink.placesCollection)
               .where(FieldPath.documentId, whereIn: placesId)
               .snapshots()
               .map((snapshot) {
             return snapshot.docs.map((doc) {
-              // Convert each document snapshot into a Hotel object
-              return Place(
-                placeId: doc.id,
-                placeName: doc['name'],
-                placeAddress: doc['address'],
-                placeDescription: doc['Description'],
-                placePostcode: doc['plz'],
-                placeStars: doc['stars'],
-              );
+              return PlaceModel(
+                  id: doc.id,
+                  name: doc[SmartLink.placeName],
+                  address: doc[SmartLink.placeName],
+                  description: doc[SmartLink.placeDescription],
+                  postcode: doc[SmartLink.placePostcode],
+                  stars: doc[SmartLink.placeStars],
+                  images: doc[SmartLink.placeImages],
+                  showPublic: doc[SmartLink.placeShowPublic]);
             }).toList();
           });
         }
 
-        return usersPlaceId.isNotEmpty
-            ? StreamBuilder<List<Place>>(
+        return userPlacesId.isNotEmpty
+            ? StreamBuilder<List<PlaceModel>>(
                 stream: getPlacesStream(),
-                builder: (BuildContext context, hotelsSnapshot) {
-                  if (hotelsSnapshot.hasError) {
-                    return Text(hotelsSnapshot.error.toString());
+                builder: (BuildContext context, availablePlacesInfoSnapshot) {
+                  if (availablePlacesInfoSnapshot.hasError) {
+                    return Scaffold(
+                        appBar: AppBar(
+                          title: const Text(SmartLink.appName),
+                        ),
+                        body: Center(
+                          child: Text(
+                              availablePlacesInfoSnapshot.error.toString()),
+                        ));
                   }
 
-                  if (hotelsSnapshot.connectionState ==
+                  if (availablePlacesInfoSnapshot.connectionState ==
                       ConnectionState.waiting) {
-                    return const Text("Loading");
+                    return Scaffold(
+                        appBar: AppBar(
+                          title: const Text(SmartLink.appName),
+                        ),
+                        body: const Center(
+                          child: Loading(),
+                        ));
                   }
                   return Scaffold(
                       appBar: AppBar(
-                        title: Text(usersPlaceId.length == 1
-                            ? hotelsSnapshot.data!.first.placeName
-                            : "SmartLink"),
+                        title: Text(userPlacesId.length == 1
+                            ? availablePlacesInfoSnapshot.data!.first.name
+                            : SmartLink.appName),
                       ),
                       drawer: Drawer(
-                        child: ListView(
-                          padding: EdgeInsets.zero,
-                          children: <Widget>[
-                            UserAccountsDrawerHeader(
-                              accountName: Text(
-                                userName,
-                                style: const TextStyle(
-                                  fontSize: 20,
+                        backgroundColor: Theme.of(context).primaryColor,
+                        child: Expanded(
+                          child: ListView(
+                            padding: EdgeInsets.zero,
+                            children: <Widget>[
+                              UserAccountsDrawerHeader(
+                                accountName: Text(
+                                  userName,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                accountEmail: Text(userEmail),
+                                currentAccountPicture: CircleAvatar(
+                                  backgroundImage: NetworkImage(userPhoto),
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
                                 ),
                               ),
-                              accountEmail: Text(userEmail),
-                              currentAccountPicture: CircleAvatar(
-                                backgroundImage: NetworkImage(userPhoto),
+                              ListView(
+                                shrinkWrap: true,
+                                children: availablePlacesInfoSnapshot.data!.map((place) {
+                                  return ListTile(
+                                    title: Text(place.name),
+                                  );
+                                }).toList(),
                               ),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
+                              ListTile(
+                                leading: const Icon(Icons.logout),
+                                title: const Text(SmartLink.signOutText),
+                                onTap: () {
+                                  SmartLink.auth.signOut();
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                          builder: (_) =>
+                                              const MyIntroductionScreen()),
+                                      (route) => false);
+                                },
                               ),
-                            ),
-                            ListView(
-                              shrinkWrap: true,
-                              children: hotelsSnapshot.data!.map((place) {
-                                return ListTile(
-                                  title: Text(place.placeName),
-                                );
-                              }).toList(),
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.logout),
-                              title: const Text('Sign out'),
-                              onTap: () {
-                                SmartLink.auth.signOut();
-                                Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                        builder: (_) =>
-                                            const IntroductionPage()),
-                                    (route) => false);
-                              },
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       body: Padding(
@@ -158,32 +211,31 @@ class _MyHomePageState extends State<MyHomePage> {
                           mainAxisSpacing: 20,
                           children: [
                             InkWell(
-                              onTap: (){
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>
-                                    ChatPage(placeId: hotelsSnapshot.data!.first.placeId,
-                                        placeName: hotelsSnapshot.data!.first.placeName)));
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => ChatPage(
+                                        placeId:
+                                        availablePlacesInfoSnapshot.data!.first.id,
+                                        placeName: availablePlacesInfoSnapshot
+                                            .data!.first.name)));
                               },
                               child: const GradeListItem(
                                 icon: Icons.chat,
-                                title: 'Group Chat',
-                                subtitle: 'Join the conversation',
+                                title: 'Chat Room',
                               ),
                             ),
                             const GradeListItem(
                               icon: Icons.info,
                               title: 'Ticket',
-                              subtitle: 'Get your event ticket',
                             ),
                             const GradeListItem(
                               icon: Icons.article,
                               title: 'News',
-                              subtitle: 'Stay up-to-date',
                             ),
                             InkWell(
                               child: const GradeListItem(
                                 icon: Icons.lock,
-                                title: 'Door Opener',
-                                subtitle: 'Unlock the door',
+                                title: 'Open Doors',
                               ),
                               onTap: () async {
                                 LocalAuthentication localAuth =
@@ -191,23 +243,20 @@ class _MyHomePageState extends State<MyHomePage> {
                                 if (await localAuth.canCheckBiometrics) {
                                   bool didAuth = await localAuth.authenticate(
                                       localizedReason:
-                                          "Please use finger print to open the door");
+                                          "Please use finger print to open doors");
                                   if (didAuth) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content: Text("worked")));
+                                    openRoom(availablePlacesInfoSnapshot
+                                        .data!.first, availablePlacesInfoSnapshot
+                                        .data!.first.name);
                                   } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content: Text("did not work")));
+                                    showErrorMessage();
                                   }
                                 }
                               },
                             ),
                             const GradeListItem(
                               icon: Icons.contacts,
-                              title: 'Contacts',
-                              subtitle: 'Find your contacts',
+                              title: 'Contact us',
                             ),
                           ],
                         ),
@@ -216,7 +265,7 @@ class _MyHomePageState extends State<MyHomePage> {
               )
             : Scaffold(
                 appBar: AppBar(
-                  title: Text("Available Places"),
+                  title: const Text(SmartLink.availablePlacesText),
                 ),
                 drawer: Drawer(
                   child: ListView(
@@ -239,169 +288,124 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       ListTile(
                         leading: const Icon(Icons.logout),
-                        title: const Text('Sign out'),
+                        title: const Text(SmartLink.signOutText),
                         onTap: () {
                           SmartLink.auth.signOut();
                           Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
-                                  builder: (_) => const IntroductionPage()),
+                                  builder: (_) => const MyIntroductionScreen()),
                               (route) => false);
                         },
                       ),
                     ],
                   ),
                 ),
-                body: ListView(
-                  children: [
-                    Card(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Image.network(
-                            "https://cf.bstatic.com/xdata/images/hotel/max1024x768/370564672.jpg?k=4f37af06c05a6f5dfc7db5e8e71d2eb66cae6eec36af7a4a4cd7a25d65ceb941&o=&hp=1",
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              child: const Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Hotel 1",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text("Description"),
-                                ],
-                              ),
+                body:
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: StreamBuilder<List<PlaceModel>>(
+                    stream: getPlaces(),
+                    builder: (BuildContext context, placesSnapshot) {
+                      if (placesSnapshot.hasError) {
+                        return Center(child: Text(placesSnapshot.error.toString()));
+                      }
+
+                      if (placesSnapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: WhiteLoading());
+                      }
+
+                      return GridView.builder(
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 1,
+                          childAspectRatio: 4/1.5,
+                          crossAxisSpacing: 30.0,
+                          mainAxisSpacing: 30.0,
+                        ),
+                        itemCount: placesSnapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              border: Border.all(color: Colors.purple)
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Card(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Image.network(
-                            "https://cf.bstatic.com/xdata/images/hotel/max1024x768/370564672.jpg?k=4f37af06c05a6f5dfc7db5e8e71d2eb66cae6eec36af7a4a4cd7a25d65ceb941&o=&hp=1",
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              child: const Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Hotel 1",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text("Description"),
-                                ],
-                              ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Image.network(
+                                      placesSnapshot.data![index].images.first,
+                                      width: 100,
+                                      height: 100,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        padding: const EdgeInsets.all(12),
+                                        child:  Column(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              placesSnapshot.data![index].name,
+
+                                              style:
+                                              const TextStyle(fontWeight: FontWeight.bold,fontSize: 18),
+                                            ),
+                                            Text(placesSnapshot.data![index].description, maxLines: 4,
+                                              overflow: TextOverflow.ellipsis,),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ],
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Card(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Image.network(
-                            "https://cf.bstatic.com/xdata/images/hotel/max1024x768/370564672.jpg?k=4f37af06c05a6f5dfc7db5e8e71d2eb66cae6eec36af7a4a4cd7a25d65ceb941&o=&hp=1",
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              child: const Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Hotel 1",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text("Description"),
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Card(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Image.network(
-                            "https://cf.bstatic.com/xdata/images/hotel/max1024x768/370564672.jpg?k=4f37af06c05a6f5dfc7db5e8e71d2eb66cae6eec36af7a4a4cd7a25d65ceb941&o=&hp=1",
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              child: const Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Hotel 1",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text("Description"),
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ));
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+
+
+
+
+        );
       },
     );
+  }
+
+  void openRoom(PlaceModel model, String placeName) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => MyAccess(
+                place: model,
+                placeName: placeName)));
+  }
+
+  void showErrorMessage() {
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text("Please try again!")));
   }
 }
 
 class GradeListItem extends StatelessWidget {
   final IconData icon;
   final String title;
-  final String subtitle;
 
   const GradeListItem({
     Key? key,
     required this.icon,
     required this.title,
-    required this.subtitle,
   }) : super(key: key);
 
   @override

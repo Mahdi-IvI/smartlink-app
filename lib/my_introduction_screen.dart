@@ -3,22 +3,21 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:smartlink/SignPage.dart';
-import 'MyHomePage.dart';
 
-class IntroductionPage extends StatefulWidget {
-  const IntroductionPage({Key? key}) : super(key: key);
+class MyIntroductionScreen extends StatefulWidget {
+  const MyIntroductionScreen({Key? key}) : super(key: key);
 
   @override
-  State<IntroductionPage> createState() => _IntroductionPageState();
+  State<MyIntroductionScreen> createState() => _MyIntroductionScreenState();
 }
 
-class _IntroductionPageState extends State<IntroductionPage> {
+class _MyIntroductionScreenState extends State<MyIntroductionScreen> {
   final introKey = GlobalKey<IntroductionScreenState>();
 
 
 
   void _onIntroEnd(context) {
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>SignPage()));
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>const SignPage()));
   }
 
 
@@ -42,7 +41,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
 
     return IntroductionScreen(
       key: introKey,
-      globalBackgroundColor: Colors.white,
+      globalBackgroundColor: Theme.of(context).primaryColor,
       allowImplicitScrolling: true,
       autoScrollDuration: 4000,
       globalHeader: Align(
@@ -58,8 +57,11 @@ class _IntroductionPageState extends State<IntroductionPage> {
         width: double.infinity,
         height: 60,
         child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.purple, // Background color
+          ),
           child: const Text(
-            'Show Available Places',
+            'Start Your Explore',
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
           ),
           onPressed: () => _onIntroEnd(context),
@@ -107,6 +109,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
       dotsDecorator: const DotsDecorator(
         size: Size(10.0, 10.0),
         color: Color(0xFFBDBDBD),
+        activeColor: Colors.purple,
         activeSize: Size(22.0, 10.0),
         activeShape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(25.0)),

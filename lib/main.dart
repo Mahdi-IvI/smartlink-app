@@ -8,7 +8,7 @@ import 'package:smartlink/config.dart';
 import 'MySplashPage.dart';
 import 'firebase_options.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -27,13 +27,21 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Smart Link',
       theme: ThemeData(
-        primaryColor: const Color(0xFF20063E),
-        appBarTheme: const AppBarTheme(
-          color: Color(0xFF20063E), // Set your desired color
-        ),
-    ),
+        brightness: Brightness.dark,
+          primaryColor: const Color(0xFF20063E),
+          appBarTheme: const AppBarTheme(
+            color: Color(0xFF20063E),
+             elevation: 0
+          ),
+          scaffoldBackgroundColor: const Color(0xFF20063E),
+          cardColor: const Color(0xFF20063E),
+        drawerTheme: const DrawerThemeData(
+          backgroundColor:  Color(0xFF20063E),
+        )
+
+
+      ),
       home: const MySplashPage(),
     );
   }
 }
-

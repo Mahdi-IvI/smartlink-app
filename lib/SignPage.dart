@@ -1,9 +1,8 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:smartlink/Loading.dart';
+import 'package:smartlink/loading.dart';
 
 import 'MyHomePage.dart';
 import 'config.dart';
@@ -27,61 +26,72 @@ class _SignPageState extends State<SignPage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset("assets/logo.png",height: 150,),
-          const SizedBox(height: kToolbarHeight,),
-          const Text("Sign in and enjoy your smart apartment",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
-          const SizedBox(height: kToolbarHeight/2,),
+          Image.asset(
+            "assets/logo.png",
+            height: 150,
+          ),
+          const SizedBox(
+            height: kToolbarHeight,
+          ),
+          const Text(
+            "Sign in and enjoy your smart apartment",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+          const SizedBox(
+            height: kToolbarHeight / 2,
+          ),
           InkWell(
-            onTap: (){
+            onTap: () {
+              if (!_loading) {
+                signInWithGoogle();
+              }
               setState(() {
                 _loading = true;
               });
-              signInWithGoogle();
+
             },
             child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               height: kToolbarHeight,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.purple, width: 2)
-              ),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.purple, width: 2)),
               child: _loading
-                  ? const Loading()
+                  ? const WhiteLoading()
                   : const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Sign in with google!")
-                ],
-              ),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Sign in with google!",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        )
+                      ],
+                    ),
             ),
           ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+          /* Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             height: kToolbarHeight,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.purple, width: 2)
-            ),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.purple, width: 2)),
             child: _loading
                 ? const Loading()
                 : const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Sign in with phone!")
-              ],
-            ),
-          ),
-
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [Text("Sign in with phone!")],
+                  ),
+          ),*/
         ],
       ),
     );
   }
 
-
   void signInWithGoogle() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     final GoogleSignInAuthentication? googleAuth =
-    await googleUser?.authentication;
+        await googleUser?.authentication;
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
@@ -104,11 +114,9 @@ class _SignPageState extends State<SignPage> {
               SmartLink.userName: user.displayName,
               SmartLink.userImageUrl: user.photoURL
             }).whenComplete(() {
-
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (_) => const MyHomePage()),
-                      (route) => false);
-
+                  (route) => false);
             });
           } else {
             await SmartLink.fireStore
@@ -121,19 +129,24 @@ class _SignPageState extends State<SignPage> {
               SmartLink.userImageUrl: user.photoURL,
             }).then((value) {
               Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                      builder: (_) => const MyHomePage()),
-                      (route) => false);
+                  MaterialPageRoute(builder: (_) => const MyHomePage()),
+                  (route) => false);
             });
           }
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text(
-              'Please try again',
-              textDirection: TextDirection.rtl,
-            )));
+          'Please try again!!!',
+          textDirection: TextDirection.rtl,
+        )));
       }
+    }).onError((error, stackTrace) {
+      setState(() {
+        _loading = false;
+      });
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Please try again!!!")));
     });
     setState(() {
       _loading = false;

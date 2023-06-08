@@ -1,10 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_pagination/firebase_pagination.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:smartlink/config.dart';
-import 'Loading.dart';
-import 'models/messageModel.dart';
+import 'loading.dart';
+import 'models/message_model.dart';
 
 class ChatPage extends StatefulWidget {
   final String placeId;
@@ -15,21 +16,19 @@ class ChatPage extends StatefulWidget {
 
   @override
   State<ChatPage> createState() => _ChatPageState();
-
 }
 
 class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   final TextEditingController _msgTextController = TextEditingController();
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
-  late String userId=SmartLink.auth.currentUser!.uid;
+      FlutterLocalNotificationsPlugin();
+  late String userId = SmartLink.auth.currentUser!.uid;
   late String documentId, userName;
   late Size size;
   bool persian = false;
 
   @override
   void initState() {
-    //WidgetsBinding.instance.addObserver(this);
     cancelNotification();
     super.initState();
   }
@@ -37,7 +36,6 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   cancelNotification() async {
     await flutterLocalNotificationsPlugin.cancelAll();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -55,112 +53,92 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
           child: Column(
             children: [
               Expanded(
-                child: Container(
-                  decoration: const BoxDecoration(
-                      color: Colors.white),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(30),
-                        topLeft: Radius.circular(30)),
-                    child: FirestorePagination(
-                      onEmpty: chatPageEmptyDisplay(),
-                      initialLoader: const Loading(),
-                      viewType: ViewType.list,
-                      itemBuilder: (context, documentSnapshots, index) {
-                        MessageModel model = MessageModel.fromJson(
-                            documentSnapshots.data()
-                            as Map<String, dynamic>,
-                            documentSnapshots.id);
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(30),
+                      topLeft: Radius.circular(30)),
+                  child: FirestorePagination(
+                    onEmpty: chatPageEmptyDisplay(),
+                    initialLoader: const Loading(),
+                    viewType: ViewType.list,
+                    itemBuilder: (context, documentSnapshots, index) {
+                      MessageModel model = MessageModel.fromJson(
+                          documentSnapshots.data() as Map<String, dynamic>,
+                          documentSnapshots.id);
 
-                        return message(model);
-                      },
-                      reverse: true,
-                      isLive: true,
-                      limit: 20,
-                      query: SmartLink.fireStore
-                          .collection("hotels")
-                          .doc(widget.placeId)
-                          .collection("groupChat")
-                          .orderBy(SmartLink.messageDate,
-                          descending: true),
-                    ),
+                      return message(model);
+                    },
+                    reverse: true,
+                    isLive: true,
+                    limit: 20,
+                    query: SmartLink.fireStore
+                        .collection(SmartLink.placesCollection)
+                        .doc(widget.placeId)
+                        .collection(SmartLink.groupChatCollection)
+                        .orderBy(SmartLink.messageDate, descending: true),
                   ),
                 ),
               ),
               Container(
-                color: Colors.white,
-                child: Container(
-                  margin: const EdgeInsets.all(8),
-                  padding: const EdgeInsets.all(4),
-                  width: size.width,
-                  child: Row(
-                    children: [
-
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8),
-                          child: TextField(
-                            maxLines: 3,
-                            minLines: 1,
-                            textDirection: persian
-                                ? TextDirection.rtl
-                                : TextDirection.ltr,
-                            keyboardType:
-                            TextInputType.multiline,
-                            controller: _msgTextController,
-                            decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                hintText: "Messege..."),
-                            onChanged: (value) {
-                              if (value.trim().startsWith(
-                                  RegExp(r'[۱-۹]'))) {
+                margin: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(4),
+                width: size.width,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: TextField(
+                          maxLines: 3,
+                          minLines: 1,
+                          textDirection:
+                              persian ? TextDirection.rtl : TextDirection.ltr,
+                          keyboardType: TextInputType.multiline,
+                          controller: _msgTextController,
+                          decoration: const InputDecoration(
+                              border: InputBorder.none, hintText: "Messege..."),
+                          onChanged: (value) {
+                            if (value.trim().startsWith(RegExp(r'[۱-۹]'))) {
+                              setState(() {
+                                persian = true;
+                              });
+                            } else {
+                              if (value.trim().startsWith(RegExp(r'[آ-ی]'))) {
                                 setState(() {
                                   persian = true;
                                 });
                               } else {
-                                if (value.trim().startsWith(
-                                    RegExp(r'[آ-ی]'))) {
-                                  setState(() {
-                                    persian = true;
-                                  });
-                                } else {
-                                  setState(() {
-                                    persian = false;
-                                  });
-                                }
+                                setState(() {
+                                  persian = false;
+                                });
                               }
-                            },
-                          ),
+                            }
+                          },
                         ),
                       ),
-                      Container(
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      child: Container(
                         decoration: BoxDecoration(
-                          borderRadius:
-                          BorderRadius.circular(100),
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Theme.of(context).primaryColor),
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.send_outlined,
-                              textDirection: TextDirection.ltr,
-                              color: Colors.white,
-                            ),
-                            onPressed: () {
-                              if (_msgTextController.text
-                                  .trim() !=
-                                  "") {
-                                sendMessage();
-                              }
-                            },
+                            shape: BoxShape.circle,
+                            color: Theme.of(context).primaryColor),
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.send_outlined,
+                            textDirection: TextDirection.ltr,
                           ),
+                          onPressed: () {
+                            if (_msgTextController.text.trim() != "") {
+                              sendMessage();
+                            }
+                          },
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -168,20 +146,18 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
         ));
   }
 
-
   chatPageEmptyDisplay() {
     return const Center(child: SizedBox());
   }
-
 
   void sendMessage() async {
     String message = _msgTextController.text.trim();
     _msgTextController.clear();
     String messageId = DateTime.now().millisecondsSinceEpoch.toString();
     await SmartLink.fireStore
-        .collection("hotels")
+        .collection(SmartLink.placesCollection)
         .doc(widget.placeId)
-        .collection("groupChat")
+        .collection(SmartLink.groupChatCollection)
         .doc(messageId)
         .set({
       SmartLink.messageText: message,
@@ -197,8 +173,8 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
         if (documentSnapshot[SmartLink.chattingWith] != userId) {
-          *//*NotificationController.instance.sendNotificationMessageToPeerUser(
-              userName, message, documentId, getterUserToken, "message");*//*
+          */ /*NotificationController.instance.sendNotificationMessageToPeerUser(
+              userName, message, documentId, getterUserToken, "message");*/ /*
         }
       } else {
         print('Document does not exist on the database');
@@ -207,12 +183,12 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   }
 
   Widget message(MessageModel model) {
-    if (model.messageSender != SmartLink.auth.currentUser!.uid) {
-      if (model.messageRead == false) {
+    if (model.sender != SmartLink.auth.currentUser!.uid) {
+      if (model.read == false) {
         SmartLink.fireStore
-            .collection("hotels")
+            .collection(SmartLink.placesCollection)
             .doc(widget.placeId)
-            .collection("groupChat")
+            .collection(SmartLink.groupChatCollection)
             .doc(model.id)
             .update({SmartLink.messageRead: true})
             .then((value) => print("User Updated"))
@@ -221,10 +197,10 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     }
 
     bool persian;
-    if (model.messageText.trim().startsWith(RegExp(r'[۱-۹]'))) {
+    if (model.text.trim().startsWith(RegExp(r'[۱-۹]'))) {
       persian = true;
     } else {
-      if (model.messageText.trim().startsWith(RegExp(r'[آ-ی]'))) {
+      if (model.text.trim().startsWith(RegExp(r'[آ-ی]'))) {
         persian = true;
       } else {
         persian = false;
@@ -233,33 +209,41 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
 
     return InkWell(
       onLongPress: () {
-        Clipboard.setData(ClipboardData(text: model.messageText));
+        Clipboard.setData(ClipboardData(text: model.text));
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('message copied')));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         child: Container(
-          margin: model.messageSender == SmartLink.auth.currentUser!.uid
+          margin: model.sender == SmartLink.auth.currentUser!.uid
               ? EdgeInsets.only(top: 0, bottom: 4, left: size.width / 6)
               : EdgeInsets.only(top: 0, bottom: 4, right: size.width / 6),
           padding: const EdgeInsets.only(right: 7, left: 7, top: 7, bottom: 5),
           decoration: BoxDecoration(
-              color: model.messageSender == SmartLink.auth.currentUser!.uid
+              color: model.sender == SmartLink.auth.currentUser!.uid
                   ? Theme.of(context).primaryColor
                   : Colors.purple[50],
-              borderRadius: model.messageSender == SmartLink.auth.currentUser!.uid
-                  ? const BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  topRight: Radius.circular(18),
-                  bottomLeft: Radius.circular(12))
-                  : const BorderRadius.only(
-                  topLeft: Radius.circular(18),
-                  topRight: Radius.circular(12),
-                  bottomRight: Radius.circular(12))),
+              border: Border.all(
+                  color: model.sender == SmartLink.auth.currentUser!.uid
+                      ? Colors.purple
+                      : Colors.transparent),
+              borderRadius:
+                  model.sender == SmartLink.auth.currentUser!.uid
+                      ? const BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(18),
+                          bottomLeft: Radius.circular(12))
+                      : const BorderRadius.only(
+                          topLeft: Radius.circular(18),
+                          topRight: Radius.circular(12),
+                          bottomRight: Radius.circular(12))),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              model.sender != SmartLink.auth.currentUser!.uid
+                  ? getUserName(model.sender)
+                  : const SizedBox(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -267,26 +251,20 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        "${model.messageDate
-                            .toDate()
-                            .day}/${model.messageDate
-                                .toDate()
-                                .month}   ",
+                        "${model.date.toDate().day}/${model.date.toDate().month}   ",
                         style: TextStyle(
-                            color: model.messageSender == SmartLink.auth.currentUser!.uid
+                            color: model.sender ==
+                                    SmartLink.auth.currentUser!.uid
                                 ? Colors.white70
                                 : Colors.black45),
                       ),
                     ],
                   ),
                   Text(
-                    "${model.messageDate
-                        .toDate()
-                        .hour}:${model.messageDate
-                            .toDate()
-                            .minute}",
+                    "${model.date.toDate().hour}:${model.date.toDate().minute}",
                     style: TextStyle(
-                        color: model.messageSender == SmartLink.auth.currentUser!.uid
+                        color: model.sender ==
+                                SmartLink.auth.currentUser!.uid
                             ? Colors.white70
                             : Colors.black45),
                   ),
@@ -299,11 +277,12 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Text(
-                        model.messageText,
+                        model.text,
                         textDirection:
-                        persian ? TextDirection.rtl : TextDirection.ltr,
+                            persian ? TextDirection.rtl : TextDirection.ltr,
                         style: TextStyle(
-                            color: model.messageSender == SmartLink.auth.currentUser!.uid
+                            color: model.sender ==
+                                    SmartLink.auth.currentUser!.uid
                                 ? Colors.white
                                 : Colors.black),
                       ),
@@ -311,22 +290,22 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                   ),
                 ],
               ),
-              model.messageSender == SmartLink.auth.currentUser!.uid
+              model.sender == SmartLink.auth.currentUser!.uid
                   ? Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Icon(
-                    model.messageRead == true
-                        ? Icons.done_all
-                        : Icons.done,
-                    color: Colors.white,
-                    size: 15,
-                  )
-                ],
-              )
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(
+                          model.read == true
+                              ? Icons.done_all
+                              : Icons.done,
+                          color: Colors.white,
+                          size: 15,
+                        )
+                      ],
+                    )
                   : const SizedBox(
-                height: 5,
-              )
+                      height: 5,
+                    )
             ],
           ),
         ),
@@ -334,4 +313,59 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     );
   }
 
+  getUserName(String userUID) {
+    String username = " ";
+
+    return StreamBuilder<DocumentSnapshot>(
+      stream: SmartLink.fireStore
+          .collection(SmartLink.userCollection)
+          .doc(userUID)
+          .snapshots(),
+      builder: (context, dataSnapshot) {
+        if (dataSnapshot.hasError) {
+          return const SizedBox();
+        }
+
+        if (dataSnapshot.data == null) {
+          username = "user";
+          return Text(
+            username,
+            style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.purple),
+          );
+        } else {
+          if (dataSnapshot.data!.exists) {
+            if (dataSnapshot.hasData) {
+              return Text(
+                dataSnapshot.data![SmartLink.userName],
+                style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.purple),
+              );
+            } else {
+              return Text(
+                dataSnapshot.data![SmartLink.userName],
+                style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.purple),
+              );
+            }
+          } else {
+            username = "user";
+            return Text(
+              username,
+              style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.purple),
+            );
+          }
+        }
+      },
+    );
+  }
 }

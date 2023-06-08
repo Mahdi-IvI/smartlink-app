@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:smartlink/config.dart';
-import 'IntroductionPage.dart';
-import 'Loading.dart';
+import 'my_introduction_screen.dart';
+import 'loading.dart';
 import 'MyHomePage.dart';
 
 class MySplashPage extends StatefulWidget {
@@ -19,11 +18,11 @@ class _MySplashPageState extends State<MySplashPage> {
     Future.delayed(const Duration(seconds: 2), () {
       if (SmartLink.auth.currentUser == null) {
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (_) => const IntroductionPage()),
+            MaterialPageRoute(builder: (_) => const MyIntroductionScreen()),
             (route) => false);
       } else {
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (_) => MyHomePage()),
+            MaterialPageRoute(builder: (_) => const MyHomePage()),
             (route) => false);
       }
     });
@@ -36,12 +35,12 @@ class _MySplashPageState extends State<MySplashPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/logo.png',
+            Image.network(
+              SmartLink.logoAddress,
               width: 100,
             ),
-            SizedBox(height: 30),
-            Loading()
+            const SizedBox(height: 30),
+            const WhiteLoading()
           ],
         ),
       ),
