@@ -9,10 +9,11 @@ import 'config.dart';
 import 'models/available_place_model.dart';
 
 class MyAccess extends StatefulWidget {
-  const MyAccess({Key? key, required this.place, required this.placeName})
+  const MyAccess({Key? key, required this.place, required this.placeName, required this.accessId})
       : super(key: key);
   final PlaceModel place;
   final String placeName;
+  final String accessId;
 
   @override
   State<MyAccess> createState() => _MyAccessState();
@@ -20,15 +21,19 @@ class MyAccess extends StatefulWidget {
 
 class _MyAccessState extends State<MyAccess> {
   Stream<List<AvailableRoom>> getAvailableRooms() {
+    print("/////////////");
+    print(widget.accessId);
+    print(widget.place.id);
     return SmartLink.fireStore
         .collection(SmartLink.userCollection)
         .doc(SmartLink.auth.currentUser!.uid)
         .collection(SmartLink.userAccessCollection)
-        .doc(widget.place.id)
+        .doc(widget.accessId)
         .collection(SmartLink.roomsCollection)
         .where(SmartLink.endTime, isGreaterThanOrEqualTo: DateTime.now())
         .snapshots()
         .map((snapshot) {
+          print(snapshot.size);
       return snapshot.docs.map((doc) {
         return AvailableRoom(
           id: doc.id,
@@ -96,6 +101,8 @@ class GradeListItem extends StatelessWidget {
 
 
   Stream<RoomModel> getRoomInfo() {
+    print(hotelId);
+    print(roomId);
     return SmartLink.fireStore
         .collection(SmartLink.placesCollection)
         .doc(hotelId)
@@ -123,23 +130,37 @@ class GradeListItem extends StatelessWidget {
         if (roomInfo.hasData) {
           return InkWell(
             onTap: () async {
-              LocalAuthentication localAuth = LocalAuthentication();
-              if (await localAuth.canCheckBiometrics) {
-                bool didAuth = await localAuth.authenticate(
-                    localizedReason:
-                        "Please use finger print to open ${roomInfo.data!.name}");
-                if (didAuth) {
-                  await SmartLink.fireStore
-                      .collection(SmartLink.placesCollection)
-                      .doc(hotelId)
-                      .collection(SmartLink.roomsCollection)
-                      .doc(roomId)
-                      .update({SmartLink.roomStatus: true});
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Please try again")));
+              if(!roomInfo.data!.status){
+                LocalAuthentication localAuth = LocalAuthentication();
+                if (await localAuth.canCheckBiometrics) {
+                  bool didAuth = await localAuth.authenticate(
+                      localizedReason:
+                      "Please use finger print to open ${roomInfo.data!.name}");
+                  if (didAuth) {
+                    await SmartLink.fireStore
+                        .collection(SmartLink.placesCollection)
+                        .doc(hotelId)
+                        .collection(SmartLink.roomsCollection)
+                        .doc(roomId)
+                        .update({SmartLink.roomStatus: true});
+
+                    await SmartLink.fireStore
+                        .collection(SmartLink.placesCollection)
+                        .doc(hotelId)
+                        .collection(SmartLink.roomsCollection)
+                        .doc(roomId)
+                        .collection(SmartLink.historyCollection).doc()
+                        .set({
+                      SmartLink.loggerUid: SmartLink.auth.currentUser!.uid,
+                      SmartLink.logDateTime: DateTime.now()
+                    });
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Please try again")));
+                  }
                 }
               }
+
             },
             child: Container(
               decoration: BoxDecoration(

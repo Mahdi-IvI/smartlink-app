@@ -93,9 +93,9 @@ class _MyHomePageState extends State<MyHomePage> {
         List<AvailablePlaceModel> userPlacesId =
             availablePlacesSnapshot.data!.where((hotel) {
           DateTime hotelStartTime = hotel.startTime
-              .toDate(); // Assuming 'startTime' is a DateTime field in the Hotel class
+              .toDate();
           DateTime hotelEndTime = hotel.endTime
-              .toDate(); // Assuming 'endTime' is a DateTime field in the Hotel class
+              .toDate();
 
           return hotelStartTime.isBefore(DateTime.now()) &&
               hotelEndTime.isAfter(DateTime.now());
@@ -117,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
               return PlaceModel(
                   id: doc.id,
                   name: doc[SmartLink.placeName],
-                  address: doc[SmartLink.placeName],
+                  address: doc[SmartLink.placeAddress],
                   description: doc[SmartLink.placeDescription],
                   postcode: doc[SmartLink.placePostcode],
                   stars: doc[SmartLink.placeStars],
@@ -160,47 +160,45 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       drawer: Drawer(
                         backgroundColor: Theme.of(context).primaryColor,
-                        child: Expanded(
-                          child: ListView(
-                            padding: EdgeInsets.zero,
-                            children: <Widget>[
-                              UserAccountsDrawerHeader(
-                                accountName: Text(
-                                  userName,
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                accountEmail: Text(userEmail),
-                                currentAccountPicture: CircleAvatar(
-                                  backgroundImage: NetworkImage(userPhoto),
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor,
+                        child: ListView(
+                          padding: EdgeInsets.zero,
+                          children: <Widget>[
+                            UserAccountsDrawerHeader(
+                              accountName: Text(
+                                userName,
+                                style: const TextStyle(
+                                  fontSize: 20,
                                 ),
                               ),
-                              ListView(
-                                shrinkWrap: true,
-                                children: availablePlacesInfoSnapshot.data!.map((place) {
-                                  return ListTile(
-                                    title: Text(place.name),
-                                  );
-                                }).toList(),
+                              accountEmail: Text(userEmail),
+                              currentAccountPicture: CircleAvatar(
+                                backgroundImage: NetworkImage(userPhoto),
                               ),
-                              ListTile(
-                                leading: const Icon(Icons.logout),
-                                title: const Text(SmartLink.signOutText),
-                                onTap: () {
-                                  SmartLink.auth.signOut();
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                          builder: (_) =>
-                                              const MyIntroductionScreen()),
-                                      (route) => false);
-                                },
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).primaryColor,
                               ),
-                            ],
-                          ),
+                            ),
+                            ListView(
+                              shrinkWrap: true,
+                              children: availablePlacesInfoSnapshot.data!.map((place) {
+                                return ListTile(
+                                  title: Text(place.name),
+                                );
+                              }).toList(),
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.logout),
+                              title: const Text(SmartLink.signOutText),
+                              onTap: () {
+                                SmartLink.auth.signOut();
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (_) =>
+                                            const MyIntroductionScreen()),
+                                    (route) => false);
+                              },
+                            ),
+                          ],
                         ),
                       ),
                       body: Padding(
@@ -210,6 +208,29 @@ class _MyHomePageState extends State<MyHomePage> {
                           crossAxisSpacing: 20,
                           mainAxisSpacing: 20,
                           children: [
+                            InkWell(
+                              child: const GradeListItem(
+                                icon: Icons.lock,
+                                title: 'Open Doors',
+                              ),
+                              onTap: () async {
+                                LocalAuthentication localAuth =
+                                LocalAuthentication();
+                                if (await localAuth.canCheckBiometrics) {
+                                  bool didAuth = await localAuth.authenticate(
+                                      localizedReason:
+                                      "Please use finger print to open doors");
+                                  if (didAuth) {
+                                    openRoom(availablePlacesInfoSnapshot
+                                        .data!.first, availablePlacesInfoSnapshot
+                                        .data!.first.name,availablePlacesSnapshot.data!.first.id
+                                    );
+                                  } else {
+                                    showErrorMessage();
+                                  }
+                                }
+                              },
+                            ),
                             InkWell(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
@@ -232,28 +253,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               icon: Icons.article,
                               title: 'News',
                             ),
-                            InkWell(
-                              child: const GradeListItem(
-                                icon: Icons.lock,
-                                title: 'Open Doors',
-                              ),
-                              onTap: () async {
-                                LocalAuthentication localAuth =
-                                    LocalAuthentication();
-                                if (await localAuth.canCheckBiometrics) {
-                                  bool didAuth = await localAuth.authenticate(
-                                      localizedReason:
-                                          "Please use finger print to open doors");
-                                  if (didAuth) {
-                                    openRoom(availablePlacesInfoSnapshot
-                                        .data!.first, availablePlacesInfoSnapshot
-                                        .data!.first.name);
-                                  } else {
-                                    showErrorMessage();
-                                  }
-                                }
-                              },
-                            ),
+
                             const GradeListItem(
                               icon: Icons.contacts,
                               title: 'Contact us',
@@ -382,13 +382,14 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void openRoom(PlaceModel model, String placeName) {
+  void openRoom(PlaceModel model, String placeName, String availablePlaceId) {
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => MyAccess(
                 place: model,
-                placeName: placeName)));
+                placeName: placeName,
+            accessId: availablePlaceId,)));
   }
 
   void showErrorMessage() {

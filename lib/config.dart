@@ -53,10 +53,16 @@ class SmartLink{
 
 
 
+  static const String historyCollection = "history";
+  static const String loggerUid = "loggerUid";
+  static const String logDateTime = "logDateTime";
+
+
+
   static const String roomsCollection = "rooms";
   static const String startTime = "startTime";
   static const String endTime = "endTime";
-  static const String roomId = "id";
+  static const String roomId = "roomId";
   static const String roomStatus = "status";
   static const String roomName = "name";
   static const String roomLocation = "location";
