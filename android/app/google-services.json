@@ -7,14 +7,30 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:504400761702:android:155664fe0aafd6fca92ea7",
+        "mobilesdk_app_id": "1:504400761702:android:a1329fe7a8ace162a92ea7",
         "android_client_info": {
-          "package_name": "com.mahdiabbasi.kan_q.kan_q"
+          "package_name": "com.smartlink.smart_link_manager"
         }
       },
       "oauth_client": [
         {
-          "client_id": "504400761702-rv4enme28n803e2f5j9vb8h08p229aqs.apps.googleusercontent.com",
+          "client_id": "504400761702-3s39qu6e4ahobch9h4m13motkq0a34e7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.smartlink.smart_link_manager",
+            "certificate_hash": "a144f28a0322745cdadeee0e699e0c9544f0af5b"
+          }
+        },
+        {
+          "client_id": "504400761702-oejuvi14kl63pml83so3hq9hu938u25o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.smartlink.smart_link_manager",
+            "certificate_hash": "58b1ccc767b83586cb0ea9b95bce5f1e9139de2d"
+          }
+        },
+        {
+          "client_id": "504400761702-da9t6lvflqpf1htsqpaufluj7ldej0qo.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,14 +43,14 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "504400761702-rv4enme28n803e2f5j9vb8h08p229aqs.apps.googleusercontent.com",
+              "client_id": "504400761702-da9t6lvflqpf1htsqpaufluj7ldej0qo.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "504400761702-8v5eseidg9n4rrbupao6ilc1c6562ubb.apps.googleusercontent.com",
+              "client_id": "504400761702-4f2vd4bl9iosl6q6lh907psopo58ajp1.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.mahdiabbasi.kanq.kanq"
+                "bundle_id": "at.smartlink.managment.smartLink.RunnerTests"
               }
             }
           ]
@@ -43,14 +59,14 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:504400761702:android:38e1f05dfdc8bb20a92ea7",
+        "mobilesdk_app_id": "1:504400761702:android:296d5c4f43101bc1a92ea7",
         "android_client_info": {
-          "package_name": "com.smartlink.app.smartlink"
+          "package_name": "com.smartlink.smartlink"
         }
       },
       "oauth_client": [
         {
-          "client_id": "504400761702-rv4enme28n803e2f5j9vb8h08p229aqs.apps.googleusercontent.com",
+          "client_id": "504400761702-da9t6lvflqpf1htsqpaufluj7ldej0qo.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -63,14 +79,14 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "504400761702-rv4enme28n803e2f5j9vb8h08p229aqs.apps.googleusercontent.com",
+              "client_id": "504400761702-da9t6lvflqpf1htsqpaufluj7ldej0qo.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "504400761702-8v5eseidg9n4rrbupao6ilc1c6562ubb.apps.googleusercontent.com",
+              "client_id": "504400761702-4f2vd4bl9iosl6q6lh907psopo58ajp1.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.mahdiabbasi.kanq.kanq"
+                "bundle_id": "at.smartlink.managment.smartLink.RunnerTests"
               }
             }
           ]

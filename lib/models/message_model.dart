@@ -1,27 +1,32 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../config.dart';
+import '../config/config.dart';
 
 class MessageModel {
-  late String id;
-  late String text;
-  late String sender;
-  late Timestamp date;
-  late bool read;
+  String id;
+  String text;
+  String senderUid;
+  Timestamp dateTime;
 
   MessageModel(
       {required this.id,
         required this.text,
-        required this.sender,
-        required this.date,
-        required this.read});
-  MessageModel.fromJson(Map<String, dynamic> json, documentId) {
-    id = documentId;
-    text = json[SmartLink.messageText];
-    sender = json[SmartLink.messageSender];
-    date = json[SmartLink.messageDate];
-    read = json[SmartLink.messageRead];
+        required this.senderUid,
+        required this.dateTime});
+
+  factory MessageModel.fromDocument(DocumentSnapshot doc) {
+    return MessageModel(
+        id : doc.id,
+        text: doc.get(Config.text),
+        senderUid: doc.get(Config.senderUid),
+        dateTime: doc.get(Config.dateTime));
   }
+
+  Map<String, dynamic> toJson() => {
+    Config.text: text,
+    Config.senderUid: senderUid,
+    Config.dateTime: dateTime,
+  };
 
 
 }

@@ -1,0 +1,48 @@
+{
+  "firstIntroductionScreenTitle": "Welcome to SmartLink!",
+  "firstIntroductionScreenBody": "Experience the future of guest service management with our cutting-edge app. From opening your hotel room door to contacting the hotel management, SmartStay puts convenience at your fingertips. Enjoy a seamless and personalized stay with us.",
+  "secondIntroductionScreenTitle": "Step into a new era of hospitality with SmartLink!",
+  "secondIntroductionScreenBody":  "Discover the power of our smart guest service management app that revolutionizes your hotel experience. Unlock your room door with a simple tap, and effortlessly connect with the hotel management for any assistance you need. Embrace a hassle-free stay with DoorLink.",
+  "thirdIntroductionScreenTitle": "Discover the future of guest service with our innovative app!",
+  "thirdIntroductionScreenBody": "Say goodbye to traditional keycards and welcome a more intuitive way to access your room. Additionally, enjoy direct communication with our responsive hotel management team, ensuring your needs are met promptly. Experience hospitality reimagined.",
+  "introductionScreenButtonText": "Start Your Explore",
+
+  "signUp": "Sign up",
+  "signOut": "Sign out",
+  "signPageMessage": "Sign in and enjoy your smart apartment",
+  "signInWithGoogle": "Sign in with google",
+  "signInWithPhone": "Sign in with phone number",
+  "pleaseTryAgain": "Please try again!",
+
+  "errorMessage" : "Something went wrong!",
+
+  "openDoors" : "Open Doors",
+  "useFingerprint" : "Please use finger print to open doors",
+  "contactUs" : "Contact us",
+  "chatRoom" : "Chat Room",
+  "ticket" : "Ticket",
+  "news" : "News",
+
+  "useFingerprintToOpen": "Please use finger print to open {roomName}.",
+  "@useFingerprintToOpen": {
+    "placeholders": {
+      "roomName": {
+        "type": "String"
+      }
+    }
+  },
+
+  "description": "Description",
+  "noNumberAvailable": "No Number Available.",
+  "numberCopied": "Phone number copied.",
+  "emailCopied": "Email Address copied.",
+  "addressCopied": "Address copied.",
+
+  "createTicketText": "Create a ticket if you need any helps.",
+  "createTicket": "Create Ticket",
+
+  "availablePlaces": "Available Places",
+
+
+  "end": "END"
+}

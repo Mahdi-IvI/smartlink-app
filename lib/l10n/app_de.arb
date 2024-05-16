@@ -1,0 +1,48 @@
+{
+  "firstIntroductionScreenTitle": "Willkommen bei SmartLink!",
+  "firstIntroductionScreenBody": "Erleben Sie die Zukunft des Gästeservice-Managements mit unserer hochmodernen App. Vom Öffnen Ihrer Hotelzimmertür bis zur Kontaktaufnahme mit der Hotelleitung – SmartStay bietet Ihnen Komfort auf Knopfdruck. Genießen Sie einen reibungslosen und individuellen Aufenthalt bei uns.",
+  "secondIntroductionScreenTitle": "Treten Sie mit SmartLink in eine neue Ära der Gastfreundschaft ein!",
+  "secondIntroductionScreenBody":  "Entdecken Sie die Leistungsfähigkeit unserer intelligenten Gästeservice-Management-App, die Ihr Hotelerlebnis revolutioniert. Öffnen Sie Ihre Zimmertür mit einem einfachen Fingertipp und kontaktieren Sie mühelos die Hotelleitung, wenn Sie Hilfe benötigen. Genießen Sie einen stressfreien Aufenthalt mit DoorLink.",
+  "thirdIntroductionScreenTitle": "Entdecken Sie die Zukunft des Gästeservices mit unserer innovativen App!",
+  "thirdIntroductionScreenBody": "Verabschieden Sie sich von herkömmlichen Schlüsselkarten und begrüßen Sie eine intuitivere Möglichkeit, auf Ihr Zimmer zuzugreifen. Genießen Sie außerdem die direkte Kommunikation mit unserem reaktionsschnellen Hotelmanagementteam, um sicherzustellen, dass Ihre Bedürfnisse umgehend erfüllt werden. Erleben Sie Gastfreundschaft neu gedacht.",
+  "introductionScreenButtonText": "Beginnen Sie mit Ihrer Erkundung",
+
+  "signUp": "Anmelden",
+  "signOut": "Abmelden",
+  "signPageMessage": "Melden Sie sich an und genießen Sie Ihr Smart Apartment",
+  "signInWithGoogle": "Mit Google anmelden",
+  "signInWithPhone": "Mit Telefonnummer anmelden",
+  "pleaseTryAgain": "Bitte versuchen Sie es noch einmal!",
+
+  "errorMessage" : "Etwas ist schief gelaufen!",
+
+  "openDoors" : "Türen öffnen",
+  "useFingerprint" : "Bitte verwenden Sie den Fingerabdruck, um Türen zu öffnen",
+  "contactUs" : "Kontaktieren Sie uns",
+  "chatRoom" : "Chat Room",
+  "ticket" : "Ticket",
+  "news" : "Neuigkeiten",
+
+  "useFingerprintToOpen": "Bitte verwenden Sie Ihren Fingerabdruck, um {roomName} zu öffnen.",
+  "@useFingerprintToOpen": {
+    "placeholders": {
+      "roomName": {
+        "type": "String"
+      }
+    }
+  },
+
+  "description": "Beschreibung",
+  "noNumberAvailable": "Keine Nummer verfügbar.",
+  "numberCopied": "Telefonnummer kopiert.",
+  "emailCopied": "E-Mail-Adresse kopiert",
+  "addressCopied": "Adresse kopiert.",
+
+  "createTicketText": "Erstellen Sie ein Ticket, wenn Sie Hilfe benötigen.",
+  "createTicket": "Ticket erstellen",
+
+  "availablePlaces": "Verfügbare Orte",
+
+
+  "end": "END"
+}
