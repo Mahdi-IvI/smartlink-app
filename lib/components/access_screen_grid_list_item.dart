@@ -84,15 +84,14 @@ class AccessScreenGridListItem extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
-                boxShadow: const [
+                /*  boxShadow: const [
                   BoxShadow(
                     color: Colors.purple,
                     blurRadius: 10.0,
                   ),
-                ],
+                ],*/
               ),
               child: Card(
-                  shadowColor: Colors.purple,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
                   child: Column(
@@ -103,12 +102,14 @@ class AccessScreenGridListItem extends StatelessWidget {
                             ? Icons.lock_open
                             : Icons.lock_outline,
                         size: 38,
+                        color: Colors.white,
                       ),
                       ListTile(
                         title: Center(
                           child: Text(
                             roomInfo.data!.name,
                             textAlign: TextAlign.center,
+                            style: const TextStyle(color: Colors.white),
                           ),
                         ),
                       ),

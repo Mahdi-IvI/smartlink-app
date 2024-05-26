@@ -351,8 +351,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void showErrorMessage() {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text("Please try again!")));
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.pleaseTryAgain)));
   }
 
   Future<void> showMyCode() {
@@ -369,17 +369,16 @@ class _MyHomePageState extends State<MyHomePage> {
           builder:
               (BuildContext context, void Function(void Function()) setState) {
             return AlertDialog(
-              title: const Text('My Personal Code'),
+              title: Text(AppLocalizations.of(context)!.myPersonalCode),
               content: H3Text(
                 text: myCode.toString(),
-                color: Colors.white,
               ),
               actions: <Widget>[
                 TextButton(
                   style: TextButton.styleFrom(
                     textStyle: Theme.of(context).textTheme.labelLarge,
                   ),
-                  child: const Text('generate again'),
+                  child: Text(AppLocalizations.of(context)!.generateAgain),
                   onPressed: () {
                     setState(() {
                       myCode = random.nextInt(999999) + 100000;
@@ -394,7 +393,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: TextButton.styleFrom(
                     textStyle: Theme.of(context).textTheme.labelLarge,
                   ),
-                  child: const Text('OK'),
+                  child: Text(AppLocalizations.of(context)!.ok),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },

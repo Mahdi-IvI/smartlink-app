@@ -43,6 +43,23 @@
 
   "availablePlaces": "Available Places",
 
+  "myPersonalCode": "My Personal Code",
+  "generateAgain": "generate again",
+  "ok": "OK",
+
+  "emptyNewsBox": "News box is empty.",
+  "readMore": "Read more...",
+
+
+  "myTickets": "My Tickets",
+  "createNewTicket": "Create a new Ticket",
+  "subject": "Subject:",
+  "message": "Message...",
+  "messageCopied": "Message copied",
+  "user": "User",
+
+
+
 
   "end": "END"
 }

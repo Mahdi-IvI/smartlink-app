@@ -43,6 +43,24 @@
 
   "availablePlaces": "Verfügbare Orte",
 
+  "myPersonalCode": "Mein persönlicher Code",
+  "generateAgain": "erneut generieren",
+  "ok": "OK",
+
+  "myTickets": "Meine Tickets",
+
+  "emptyNewsBox": "Die Nachrichtenbox ist leer.",
+  "readMore": "Weiterlesen...",
+
+  "createNewTicket": "Erstellen Sie ein neues Ticket",
+  "subject": "Betreff:",
+  "message": "Nachricht...",
+  "messageCopied": "Nachricht kopiert",
+
+  "user": "Benutzer",
+
+
+
 
   "end": "END"
 }

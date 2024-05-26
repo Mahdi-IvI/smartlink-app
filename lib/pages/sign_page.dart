@@ -29,8 +29,8 @@ class _SignPageState extends State<SignPage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(
-            "assets/logo.png",
+          Image.network(
+            Config.logoWithoutBgAddress,
             height: 150,
           ),
           const SizedBox(
@@ -45,7 +45,7 @@ class _SignPageState extends State<SignPage> {
           ),
           MyOutlinedButton(
             text: AppLocalizations.of(context)!.signInWithGoogle,
-            child: _loading ? const WhiteLoading() : null,
+            child: _loading ? const Loading() : null,
             onTap: () {
               if (!_loading) {
                 signInWithGoogle();

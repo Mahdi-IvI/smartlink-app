@@ -31,16 +31,23 @@ class UserModel {
         email: doc.get(Config.email),
         username: doc.get(Config.username),
         code: doc.get(Config.code),
-        phoneNumber: doc.data().toString().contains(Config.phoneNumber) ? doc.get(Config.phoneNumber):null,
-        firstname: doc.data().toString().contains(Config.firstname) ? doc.get(Config.firstname):null,
-        lastname: doc.data().toString().contains(Config.lastname) ? doc.get(Config.lastname):null,
-        passportNumber: doc.data().toString().contains(Config.passportNumber) ? doc.get(Config.passportNumber):null);
+        phoneNumber: doc.data().toString().contains(Config.phoneNumber)
+            ? doc.get(Config.phoneNumber)
+            : null,
+        firstname: doc.data().toString().contains(Config.firstname)
+            ? doc.get(Config.firstname)
+            : null,
+        lastname: doc.data().toString().contains(Config.lastname)
+            ? doc.get(Config.lastname)
+            : null,
+        passportNumber: doc.data().toString().contains(Config.passportNumber)
+            ? doc.get(Config.passportNumber)
+            : null);
   }
 
   Map<String, dynamic> toJson() => {
-    Config.email: email,
-    Config.username: username,
-    Config.imageUrl: imageUrl
-  };
-
+        Config.email: email,
+        Config.username: username,
+        Config.imageUrl: imageUrl
+      };
 }

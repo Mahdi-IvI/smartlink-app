@@ -10,10 +10,10 @@ class NewsModel {
 
   NewsModel(
       {required this.id,
-        required this.title,
-        required this.images,
-        required this.description,
-        required this.publishDateTime});
+      required this.title,
+      required this.images,
+      required this.description,
+      required this.publishDateTime});
 
   factory NewsModel.fromDocument(DocumentSnapshot doc) {
     return NewsModel(

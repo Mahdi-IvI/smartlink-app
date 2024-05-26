@@ -5,6 +5,7 @@ import 'package:smartlink/components/my_container.dart';
 import 'package:smartlink/config/config.dart';
 import 'package:smartlink/models/message_model.dart';
 import 'package:smartlink/models/ticket_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../models/place_model.dart';
 
@@ -29,7 +30,7 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Create a new Ticket"),
+        title: Text(AppLocalizations.of(context)!.createNewTicket),
       ),
       body: Column(
         children: [
@@ -58,9 +59,9 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                             horizontal: 20, vertical: 0),
                         child: TextFormField(
                           controller: subjectController,
-                          decoration: const InputDecoration(
-                            //   errorText: "Please fill the Subject.",
-                              labelText: "Subject: ",
+                          decoration: InputDecoration(
+                              //   errorText: "Please fill the Subject.",
+                              labelText: AppLocalizations.of(context)!.subject,
                               border: InputBorder.none),
                         )),
                     MyContainer(
@@ -72,9 +73,9 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                           controller: descriptionController,
                           minLines: 3,
                           maxLines: 6,
-                          decoration: const InputDecoration(
-                            //   errorText: "Please fill the Description.",
-                              labelText: "Description: ",
+                          decoration: InputDecoration(
+                              labelText:
+                                  AppLocalizations.of(context)!.description,
                               border: InputBorder.none),
                         )),
                   ],
@@ -87,25 +88,25 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
             child: ListTile(
               title: Center(
-                  child: loading ? const WhiteLoading() : const Text(
-                    "Submit",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  )),
+                  child: loading
+                      ? const WhiteLoading()
+                      : const Text(
+                          "Submit",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        )),
               onTap: () {
                 if (_formKey.currentState!.validate()) {
                   setState(() {
                     loading = true;
                   });
                   String docId = Config.auth.currentUser!.uid +
-                      DateTime
-                          .now()
-                          .microsecondsSinceEpoch
-                          .toString();
-                  TicketModel ticketModel = TicketModel(id: docId,
+                      DateTime.now().microsecondsSinceEpoch.toString();
+                  TicketModel ticketModel = TicketModel(
+                      id: docId,
+                      read: false,
                       subject: subjectController.text.trim(),
                       lastMessageDateTime: Timestamp.now(),
                       senderUid: Config.auth.currentUser!.uid,
-                      read: false,
                       lastSender: Config.auth.currentUser!.uid,
                       createDateTime: Timestamp.now(),
                       description: descriptionController.text.trim());
@@ -114,12 +115,12 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                       .doc(widget.place.id)
                       .collection(Config.ticketCollection)
                       .doc(docId)
-                      .set(ticketModel.toJson()).whenComplete(() {
+                      .set(ticketModel.toJson())
+                      .whenComplete(() {
                     MessageModel message = MessageModel(
                         id: docId,
                         dateTime: Timestamp.now(),
-                        senderUid: Config.auth.currentUser!
-                            .uid,
+                        senderUid: Config.auth.currentUser!.uid,
                         text: descriptionController.text.trim());
                     Config.fireStore
                         .collection(Config.placesCollection)

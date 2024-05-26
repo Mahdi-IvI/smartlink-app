@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +20,6 @@ class NewsDetailPageState extends State<NewsDetailPage> {
   final CarouselController _controller = CarouselController();
   int _current = 0;
 
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -32,11 +30,9 @@ class NewsDetailPageState extends State<NewsDetailPage> {
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(255, 255, 255, 0),
         elevation: 0,
-        title:Text(
+        title: Text(
           widget.newsModel.title,
-          style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18),
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
         ),
       ),
       body: SingleChildScrollView(
@@ -47,8 +43,7 @@ class NewsDetailPageState extends State<NewsDetailPage> {
                 CarouselSlider.builder(
                   carouselController: _controller,
                   itemCount: widget.newsModel.images.length,
-                  itemBuilder: (BuildContext context, index, _) =>
-                      InkWell(
+                  itemBuilder: (BuildContext context, index, _) => InkWell(
                     onTap: () {
                       Navigator.push(
                           context,
@@ -60,7 +55,7 @@ class NewsDetailPageState extends State<NewsDetailPage> {
                                   )));
                     },
                     child: AspectRatio(
-                      aspectRatio: 4/3,
+                      aspectRatio: 4 / 3,
                       child: CachedNetworkImage(
                         fit: BoxFit.cover,
                         imageUrl: widget.newsModel.images[index],
@@ -81,8 +76,7 @@ class NewsDetailPageState extends State<NewsDetailPage> {
                       enlargeCenterPage: false,
                       onPageChanged: (index, reason) {
                         setState(() {
-                          if (index >=
-                              widget.newsModel.images.length) {
+                          if (index >= widget.newsModel.images.length) {
                             index = 0;
                           }
                           _current = index;
@@ -112,15 +106,13 @@ class NewsDetailPageState extends State<NewsDetailPage> {
                                         color: Colors.white,
                                         spreadRadius: 1,
                                         blurRadius: 2,
-                                        offset: Offset(0,
-                                            0), // changes position of shadow
+                                        offset: Offset(
+                                            0, 0), // changes position of shadow
                                       ),
                                     ],
                                     shape: BoxShape.circle,
                                     color: (Colors.black).withOpacity(
-                                        _current == entry.key
-                                            ? 0.9
-                                            : 0.2)),
+                                        _current == entry.key ? 0.9 : 0.2)),
                               );
                             }).toList(),
                           ),
@@ -143,15 +135,11 @@ class NewsDetailPageState extends State<NewsDetailPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    time_ago
-                        .format(
-                            DateTime.fromMicrosecondsSinceEpoch(widget
-                                .newsModel
-                                .publishDateTime
-                                .microsecondsSinceEpoch),
-                            locale: 'en'),
-                    style:
-                        const TextStyle( fontSize: 12),
+                    time_ago.format(
+                        DateTime.fromMicrosecondsSinceEpoch(widget
+                            .newsModel.publishDateTime.microsecondsSinceEpoch),
+                        locale: 'en'),
+                    style: const TextStyle(fontSize: 12),
                   ),
                 ],
               ),
@@ -161,5 +149,4 @@ class NewsDetailPageState extends State<NewsDetailPage> {
       ),
     );
   }
-
 }

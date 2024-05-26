@@ -10,23 +10,21 @@ class MessageModel {
 
   MessageModel(
       {required this.id,
-        required this.text,
-        required this.senderUid,
-        required this.dateTime});
+      required this.text,
+      required this.senderUid,
+      required this.dateTime});
 
   factory MessageModel.fromDocument(DocumentSnapshot doc) {
     return MessageModel(
-        id : doc.id,
+        id: doc.id,
         text: doc.get(Config.text),
         senderUid: doc.get(Config.senderUid),
         dateTime: doc.get(Config.dateTime));
   }
 
   Map<String, dynamic> toJson() => {
-    Config.text: text,
-    Config.senderUid: senderUid,
-    Config.dateTime: dateTime,
-  };
-
-
+        Config.text: text,
+        Config.senderUid: senderUid,
+        Config.dateTime: dateTime,
+      };
 }

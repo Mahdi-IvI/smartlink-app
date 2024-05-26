@@ -2,13 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../config/config.dart';
 
-class HistoryModel{
+class HistoryModel {
   String id;
   Timestamp logDateTime;
   String loggerUid;
   bool setStatusTo;
 
-  HistoryModel({required this.id,required this.logDateTime, required this.loggerUid, required this.setStatusTo});
+  HistoryModel(
+      {required this.id,
+      required this.logDateTime,
+      required this.loggerUid,
+      required this.setStatusTo});
 
   factory HistoryModel.fromDocument(DocumentSnapshot doc) {
     return HistoryModel(
@@ -20,7 +24,8 @@ class HistoryModel{
   }
 
   Map<String, dynamic> toJson() => {
-    Config.logDateTime: logDateTime,
-    Config.loggerUid: loggerUid,
-    Config.setStatusTo: setStatusTo};
+        Config.logDateTime: logDateTime,
+        Config.loggerUid: loggerUid,
+        Config.setStatusTo: setStatusTo
+      };
 }

@@ -23,25 +23,26 @@ class PlaceModel {
   String facebook;
   String website;
 
-  PlaceModel({required this.id,
-    required this.name,
-    required this.address,
-    required this.city,
-    required this.country,
-    required this.description,
-    required this.descriptionDe,
-    required this.groupChatEnabled,
-    required this.newsEnabled,
-    required this.ticketSystemEnabled,
-    required this.images,
-    required this.phoneNumbers,
-    required this.email,
-    required this.instagram,
-    required this.facebook,
-    required this.website,
-    required this.postCode,
-    required this.showPublic,
-    required this.stars});
+  PlaceModel(
+      {required this.id,
+      required this.name,
+      required this.address,
+      required this.city,
+      required this.country,
+      required this.description,
+      required this.descriptionDe,
+      required this.groupChatEnabled,
+      required this.newsEnabled,
+      required this.ticketSystemEnabled,
+      required this.images,
+      required this.phoneNumbers,
+      required this.email,
+      required this.instagram,
+      required this.facebook,
+      required this.website,
+      required this.postCode,
+      required this.showPublic,
+      required this.stars});
 
   factory PlaceModel.fromDocument(DocumentSnapshot doc) {
     return PlaceModel(
@@ -65,5 +66,4 @@ class PlaceModel {
         showPublic: doc.get(Config.showPublic),
         stars: doc.get(Config.stars));
   }
-  
 }

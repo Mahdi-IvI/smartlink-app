@@ -8,6 +8,7 @@ import '../config/config.dart';
 import '../models/news_model.dart';
 import 'news_detail_page.dart';
 import 'package:timeago/timeago.dart' as time_ago;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NewsPage extends StatefulWidget {
   final PlaceModel place;
@@ -24,7 +25,8 @@ class _NewsPageState extends State<NewsPage> {
   @override
   Widget build(BuildContext context) {
     if (kDebugMode) {
-      print("${Config.placesCollection} > ${widget.place.id} > ${Config.newsCollection}");
+      print(
+          "${Config.placesCollection} > ${widget.place.id} > ${Config.newsCollection}");
     }
     return RefreshIndicator(
       onRefresh: () async {
@@ -34,17 +36,16 @@ class _NewsPageState extends State<NewsPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            "News",
+          title: Text(
+            AppLocalizations.of(context)!.news,
           ),
         ),
         body: FirestorePagination(
           initialLoader: const Loading(),
-          onEmpty: const EmptyWidget("News box is empty."),
+          onEmpty: EmptyWidget(AppLocalizations.of(context)!.emptyNewsBox),
           viewType: ViewType.list,
           itemBuilder: (context, documentSnapshots, index) {
-            NewsModel model = NewsModel.fromDocument(
-                documentSnapshots);
+            NewsModel model = NewsModel.fromDocument(documentSnapshots);
             return Column(
               children: [
                 AspectRatio(
@@ -108,9 +109,10 @@ class _NewsPageState extends State<NewsPage> {
                                         builder: (context) =>
                                             NewsDetailPage(newsModel: model)));
                               },
-                              child: const Text(
-                                "Read more...",
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                              child: Text(
+                                AppLocalizations.of(context)!.readMore,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               )),
                         ],
                       ),

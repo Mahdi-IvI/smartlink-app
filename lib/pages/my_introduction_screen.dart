@@ -13,15 +13,14 @@ class MyIntroductionScreen extends StatefulWidget {
 }
 
 class _MyIntroductionScreenState extends State<MyIntroductionScreen> {
-
   void _onIntroEnd(context) {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const SignPage()));
   }
 
   Widget _buildImage({required String assetName, double? width}) {
-    return Image.asset(
-      Config.logoAssetAddress,
+    return Image.network(
+      Config.logoWithoutBgAddress,
       width: width ?? 50,
     );
   }
@@ -29,17 +28,16 @@ class _MyIntroductionScreenState extends State<MyIntroductionScreen> {
   @override
   Widget build(BuildContext context) {
     PageDecoration pageDecoration = PageDecoration(
-      titleTextStyle:
-          const TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
-      bodyPadding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-      pageColor: Theme.of(context).scaffoldBackgroundColor,
-      imagePadding: EdgeInsets.zero,
-      bodyFlex: 5,
-      imageFlex: 3
-    );
+        titleTextStyle:
+            const TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
+        bodyPadding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+        pageColor: Theme.of(context).scaffoldBackgroundColor,
+        imagePadding: EdgeInsets.zero,
+        bodyFlex: 5,
+        imageFlex: 3);
 
     return IntroductionScreen(
-      globalBackgroundColor: Theme.of(context).primaryColor,
+      globalBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
       //globalBackgroundColor: Colors.white,
       allowImplicitScrolling: true,
       autoScrollDuration: 5000,
@@ -65,23 +63,20 @@ class _MyIntroductionScreenState extends State<MyIntroductionScreen> {
       pages: [
         PageViewModel(
           title: AppLocalizations.of(context)!.firstIntroductionScreenTitle,
-          body:
-          AppLocalizations.of(context)!.firstIntroductionScreenBody,
+          body: AppLocalizations.of(context)!.firstIntroductionScreenBody,
           image: _buildImage(assetName: 'User flow-pana.png', width: 100),
           decoration: pageDecoration,
         ),
         PageViewModel(
           title: AppLocalizations.of(context)!.secondIntroductionScreenTitle,
-          body:
-          AppLocalizations.of(context)!.secondIntroductionScreenBody,
-          image: _buildImage(assetName: 'Prototyping process-bro.png', width: 100),
+          body: AppLocalizations.of(context)!.secondIntroductionScreenBody,
+          image:
+              _buildImage(assetName: 'Prototyping process-bro.png', width: 100),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title:
-          AppLocalizations.of(context)!.thirdIntroductionScreenTitle,
-          body:
-          AppLocalizations.of(context)!.thirdIntroductionScreenBody,
+          title: AppLocalizations.of(context)!.thirdIntroductionScreenTitle,
+          body: AppLocalizations.of(context)!.thirdIntroductionScreenBody,
           image: _buildImage(assetName: 'Messaging-amico.png', width: 100),
           decoration: pageDecoration,
         ),

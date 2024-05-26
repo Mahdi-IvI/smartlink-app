@@ -10,10 +10,10 @@ class RoomModel {
 
   RoomModel(
       {required this.id,
-        required this.location,
-        required this.name,
-        required this.status,
-        required this.public});
+      required this.location,
+      required this.name,
+      required this.status,
+      required this.public});
 
   factory RoomModel.fromDocument(DocumentSnapshot doc) {
     return RoomModel(

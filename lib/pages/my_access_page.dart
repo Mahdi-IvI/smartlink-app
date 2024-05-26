@@ -8,6 +8,7 @@ import '../config/config.dart';
 
 class MyAccessPage extends StatefulWidget {
   const MyAccessPage({super.key, required this.place});
+
   final PlaceModel place;
 
   @override
@@ -16,7 +17,6 @@ class MyAccessPage extends StatefulWidget {
 
 class _MyAccessPageState extends State<MyAccessPage> {
   Stream<List<UserAccessModel>> getAvailableRooms() {
-
     return Config.fireStore
         .collection(Config.userCollection)
         .doc(Config.auth.currentUser!.uid)
@@ -25,9 +25,9 @@ class _MyAccessPageState extends State<MyAccessPage> {
         .collection(Config.roomsCollection)
         .snapshots()
         .map((snapshot) {
-          if (kDebugMode) {
-            print(snapshot.docs.length);
-          }
+      if (kDebugMode) {
+        print(snapshot.docs.length);
+      }
       return snapshot.docs.map((doc) {
         return UserAccessModel.fromDocument(doc);
       }).toList();
@@ -77,4 +77,3 @@ class _MyAccessPageState extends State<MyAccessPage> {
     );
   }
 }
-

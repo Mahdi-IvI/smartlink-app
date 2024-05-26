@@ -8,6 +8,8 @@ class Config {
 
   static const String logoAddress =
       'https://firebasestorage.googleapis.com/v0/b/smartlink-pro.appspot.com/o/logo%2Fguest%20app%20logo.png?alt=media&token=8ba39061-d65c-43dd-9a22-61b074d4f9f2';
+  static const String logoWithoutBgAddress =
+      'https://firebasestorage.googleapis.com/v0/b/smartlink-pro.appspot.com/o/logo%2FArtboard%201guest-whitout-bg.png?alt=media&token=47b90640-a723-409f-9ec5-c0b0e58fb214';
 
   static const String logoAssetAddress = "assets/logo.png";
 

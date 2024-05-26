@@ -30,14 +30,17 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
-          brightness: Brightness.dark,
+          brightness: Brightness.light,
           primaryColor: const Color(0xFF20063E),
-          appBarTheme:
-              const AppBarTheme(color: Color(0xFF20063E), elevation: 0),
-          scaffoldBackgroundColor: const Color(0xFF20063E),
-          cardColor: const Color(0xFF20063E),
+          appBarTheme: const AppBarTheme(
+              color: Colors.white, foregroundColor: Colors.black, elevation: 0),
+          scaffoldBackgroundColor: Colors.white,
+          cardTheme: const CardTheme(
+              shadowColor: Colors.purple,
+              color: Color(0xFF20063E),
+              elevation: 10),
           drawerTheme: const DrawerThemeData(
-            backgroundColor: Color(0xFF20063E),
+            backgroundColor: Colors.white,
           )),
       home: const SplashScreen(),
     );

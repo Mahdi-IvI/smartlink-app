@@ -3,8 +3,11 @@ import 'package:firebase_pagination/firebase_pagination.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:smartlink/config/config.dart';
+import 'package:smartlink/config/my_colors.dart';
 import 'package:smartlink/models/place_model.dart';
 import 'package:smartlink/models/ticket_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import '../components/loading.dart';
 import '../models/message_model.dart';
 
@@ -26,7 +29,9 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.place.name),
+          title: Text(widget.ticket != null
+              ? widget.ticket!.subject
+              : widget.place.name),
           centerTitle: true,
         ),
         body: GestureDetector(
@@ -83,8 +88,9 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                           minLines: 1,
                           keyboardType: TextInputType.multiline,
                           controller: _msgTextController,
-                          decoration: const InputDecoration(
-                              border: InputBorder.none, hintText: "Messege..."),
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: AppLocalizations.of(context)!.message),
                         ),
                       ),
                     ),
@@ -100,6 +106,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                           icon: const Icon(
                             Icons.send_outlined,
                             textDirection: TextDirection.ltr,
+                            color: Colors.white,
                           ),
                           onPressed: () {
                             if (_msgTextController.text.trim() != "") {
@@ -126,17 +133,28 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     _msgTextController.clear();
     String messageId = DateTime.now().millisecondsSinceEpoch.toString();
     if (widget.ticket != null) {
-      await Config.fireStore
+      Config.fireStore
           .collection(Config.placesCollection)
           .doc(widget.place.id)
           .collection(Config.ticketCollection)
           .doc(widget.ticket!.id)
-          .collection(Config.ticketMessageCollection)
-          .doc(messageId)
-          .set({
-        Config.text: message,
-        Config.senderUid: Config.auth.currentUser!.uid,
-        Config.dateTime: DateTime.now(),
+          .update({
+        Config.lastMessageDateTime: DateTime.now(),
+        Config.lastSender: Config.auth.currentUser!.uid,
+        Config.read: false,
+      }).whenComplete(() async {
+        await Config.fireStore
+            .collection(Config.placesCollection)
+            .doc(widget.place.id)
+            .collection(Config.ticketCollection)
+            .doc(widget.ticket!.id)
+            .collection(Config.ticketMessageCollection)
+            .doc(messageId)
+            .set({
+          Config.text: message,
+          Config.senderUid: Config.auth.currentUser!.uid,
+          Config.dateTime: DateTime.now(),
+        });
       });
     } else {
       await Config.fireStore
@@ -156,8 +174,8 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     return InkWell(
       onLongPress: () {
         Clipboard.setData(ClipboardData(text: model.text));
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('message copied')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(AppLocalizations.of(context)!.messageCopied)));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -167,13 +185,17 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
               : EdgeInsets.only(top: 0, bottom: 4, right: size.width / 6),
           padding: const EdgeInsets.only(right: 7, left: 7, top: 7, bottom: 5),
           decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: MyColors.primaryColor,
+                  blurRadius: 3,
+                  spreadRadius: 0,
+                  offset: const Offset(0, 2),
+                ),
+              ],
               color: model.senderUid == Config.auth.currentUser!.uid
-                  ? Theme.of(context).primaryColor
-                  : Colors.purple[50],
-              border: Border.all(
-                  color: model.senderUid == Config.auth.currentUser!.uid
-                      ? Colors.purple
-                      : Colors.transparent),
+                  ? Colors.purple[50]
+                  : Theme.of(context).primaryColor,
               borderRadius: model.senderUid == Config.auth.currentUser!.uid
                   ? const BorderRadius.only(
                       topLeft: Radius.circular(12),
@@ -200,16 +222,16 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                         style: TextStyle(
                             color:
                                 model.senderUid == Config.auth.currentUser!.uid
-                                    ? Colors.white70
-                                    : Colors.black45),
+                                    ? Colors.black45
+                                    : Colors.white70),
                       ),
                       Text(
                         "${model.dateTime.toDate().hour}:${model.dateTime.toDate().minute}",
                         style: TextStyle(
                             color:
                                 model.senderUid == Config.auth.currentUser!.uid
-                                    ? Colors.white70
-                                    : Colors.black45),
+                                    ? Colors.black45
+                                    : Colors.white70),
                       ),
                     ],
                   ),
@@ -226,8 +248,8 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                         style: TextStyle(
                             color:
                                 model.senderUid == Config.auth.currentUser!.uid
-                                    ? Colors.white
-                                    : Colors.black),
+                                    ? Colors.black
+                                    : Colors.white),
                       ),
                     ),
                   ),
@@ -239,7 +261,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                       children: [
                         Icon(
                           Icons.done,
-                          color: Colors.white,
+                          color: Colors.black,
                           size: 15,
                         )
                       ],
@@ -275,13 +297,13 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
           }
 
           if (dataSnapshot.data == null) {
-            username = "user";
+            username = AppLocalizations.of(context)!.user;
             return Text(
               username,
               style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.purple),
+                  color: Colors.white),
             );
           } else {
             if (dataSnapshot.data!.exists) {
@@ -291,7 +313,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                   style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.purple),
+                      color: Colors.white),
                 );
               } else {
                 return Text(
@@ -299,17 +321,17 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                   style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.purple),
+                      color: Colors.white),
                 );
               }
             } else {
-              username = "user";
+              username = AppLocalizations.of(context)!.user;
               return Text(
                 username,
                 style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.purple),
+                    color: Colors.white),
               );
             }
           }

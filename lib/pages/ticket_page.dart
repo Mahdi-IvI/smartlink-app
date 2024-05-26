@@ -38,7 +38,7 @@ class _TicketPageState extends State<TicketPage> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("My Tickets"),
+        title: Text(AppLocalizations.of(context)!.myTickets),
         actions: [
           IconButton(
               onPressed: () {

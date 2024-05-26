@@ -24,15 +24,8 @@ class TicketListItem extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.purple,
-              blurRadius: 10.0,
-            ),
-          ],
         ),
         child: Card(
-            shadowColor: Colors.purple,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
             child: Column(
@@ -41,11 +34,15 @@ class TicketListItem extends StatelessWidget {
                 ListTile(
                   title: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(ticket.subject),
+                    child: Text(
+                      ticket.subject,
+                      style: const TextStyle(color: Colors.white),
+                    ),
                   ),
                   subtitle: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(ticket.description),
+                    child: Text(ticket.description,
+                        style: const TextStyle(color: Colors.white)),
                   ),
                 ),
               ],

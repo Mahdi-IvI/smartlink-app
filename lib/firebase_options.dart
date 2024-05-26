@@ -64,8 +64,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '504400761702',
     projectId: 'smartlink-pro',
     storageBucket: 'smartlink-pro.appspot.com',
-    androidClientId: '504400761702-2h2ffa1qo66lvn6pvo8le3c63kap7291.apps.googleusercontent.com',
-    iosClientId: '504400761702-fa0pd93lq55fl8s7m4de5fakbju97dvb.apps.googleusercontent.com',
+    androidClientId:
+        '504400761702-2h2ffa1qo66lvn6pvo8le3c63kap7291.apps.googleusercontent.com',
+    iosClientId:
+        '504400761702-fa0pd93lq55fl8s7m4de5fakbju97dvb.apps.googleusercontent.com',
     iosBundleId: 'com.smartlink.app.smartlink',
   );
 
@@ -75,8 +77,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '504400761702',
     projectId: 'smartlink-pro',
     storageBucket: 'smartlink-pro.appspot.com',
-    androidClientId: '504400761702-2h2ffa1qo66lvn6pvo8le3c63kap7291.apps.googleusercontent.com',
-    iosClientId: '504400761702-fa0pd93lq55fl8s7m4de5fakbju97dvb.apps.googleusercontent.com',
+    androidClientId:
+        '504400761702-2h2ffa1qo66lvn6pvo8le3c63kap7291.apps.googleusercontent.com',
+    iosClientId:
+        '504400761702-fa0pd93lq55fl8s7m4de5fakbju97dvb.apps.googleusercontent.com',
     iosBundleId: 'com.smartlink.app.smartlink',
   );
 
