@@ -23,6 +23,7 @@ class _MyAccessPageState extends State<MyAccessPage> {
         .collection(Config.userAccessCollection)
         .doc(widget.place.id)
         .collection(Config.roomsCollection)
+        .where(Config.endDateTime, isGreaterThan: DateTime.now())
         .snapshots()
         .map((snapshot) {
       if (kDebugMode) {

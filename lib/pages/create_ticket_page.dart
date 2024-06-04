@@ -40,27 +40,17 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    /* MyContainer(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 0),
-                        child: TextFormField(
-                          controller: categoryController,
-                          decoration: const InputDecoration(
-                              labelText: "Category: ",
-                              errorText: "Please choose a Category.",
-                              border: InputBorder.none),
-                        )),*/
                     MyContainer(
                         margin: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 10),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 0),
                         child: TextFormField(
+                          style: const TextStyle(color: Colors.white),
                           controller: subjectController,
                           decoration: InputDecoration(
                               //   errorText: "Please fill the Subject.",
+                              labelStyle: const TextStyle(color: Colors.white),
                               labelText: AppLocalizations.of(context)!.subject,
                               border: InputBorder.none),
                         )),
@@ -70,12 +60,14 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 0),
                         child: TextFormField(
+                          style: const TextStyle(color: Colors.white),
                           controller: descriptionController,
                           minLines: 3,
                           maxLines: 6,
                           decoration: InputDecoration(
                               labelText:
                                   AppLocalizations.of(context)!.description,
+                              labelStyle: const TextStyle(color: Colors.white),
                               border: InputBorder.none),
                         )),
                   ],
@@ -90,9 +82,9 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
               title: Center(
                   child: loading
                       ? const WhiteLoading()
-                      : const Text(
-                          "Submit",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                      : Text(
+                          AppLocalizations.of(context)!.submit,
+                          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                         )),
               onTap: () {
                 if (_formKey.currentState!.validate()) {

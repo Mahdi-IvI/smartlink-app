@@ -279,11 +279,11 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   getUserName(String userUID) {
     String username = " ";
 
-    if (widget.ticket != null) {
+    if (widget.ticket != null || userUID == widget.place.id) {
       return Text(
         widget.place.name,
         style: const TextStyle(
-            fontSize: 18, fontWeight: FontWeight.bold, color: Colors.purple),
+            fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
       );
     } else {
       return StreamBuilder<DocumentSnapshot>(
