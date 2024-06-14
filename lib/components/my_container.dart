@@ -17,12 +17,6 @@ class MyContainer extends StatelessWidget {
       margin: margin,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.purple,
-            blurRadius: 10.0,
-          ),
-        ],
       ),
       child: Card(
           shadowColor: Colors.purple,

@@ -51,7 +51,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                     viewType: ViewType.list,
                     itemBuilder: (context, documentSnapshots, index) {
                       MessageModel model =
-                          MessageModel.fromDocument(documentSnapshots);
+                          MessageModel.fromDocument(documentSnapshots[index]);
 
                       return message(model: model, size: size);
                     },

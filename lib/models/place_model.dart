@@ -17,10 +17,10 @@ class PlaceModel {
   List<dynamic> phoneNumbers;
   String postCode;
   bool showPublic;
-  int stars;
+  int? stars;
   String email;
-  String instagram;
-  String facebook;
+  String? instagram;
+  String? facebook;
   String website;
 
   PlaceModel(
@@ -58,12 +58,18 @@ class PlaceModel {
         ticketSystemEnabled: doc.get(Config.ticketSystemEnabled),
         images: doc.get(Config.images),
         phoneNumbers: doc.get(Config.phoneNumbers),
-        instagram: doc.get(Config.instagram),
-        facebook: doc.get(Config.facebook),
+        instagram:  doc.data().toString().contains(Config.instagram)
+            ? doc.get(Config.instagram)
+            : null,
+        facebook:  doc.data().toString().contains(Config.facebook)
+            ? doc.get(Config.facebook)
+            : null,
         email: doc.get(Config.email),
         website: doc.get(Config.website),
         postCode: doc.get(Config.postCode),
         showPublic: doc.get(Config.showPublic),
-        stars: doc.get(Config.stars));
+        stars:  doc.data().toString().contains(Config.stars)
+            ? doc.get(Config.stars)
+            : null);
   }
 }

@@ -189,7 +189,8 @@ class _PlaceInfoPageState extends State<PlaceInfoPage> {
                             ],
                           ),
                         ),
-                      if (widget.place.instagram != "")
+                      if (widget.place.instagram != null &&
+                          widget.place.instagram != "")
                         SizedBox(
                           width: (size.width - 24) / 5,
                           child: Column(
@@ -203,14 +204,14 @@ class _PlaceInfoPageState extends State<PlaceInfoPage> {
                                     icon: Icon(MdiIcons.instagram),
                                     color: Colors.black,
                                     onPressed: () {
-                                      String instagram = widget.place.instagram;
+                                      String instagram = widget.place.instagram!;
                                       _openInstagram(instagram);
                                     }),
                               ),
                             ],
                           ),
                         ),
-                      if (widget.place.facebook != "")
+                      if (widget.place.facebook!=null && widget.place.facebook != "")
                         SizedBox(
                           width: (size.width - 24) / 5,
                           child: Column(
@@ -224,7 +225,7 @@ class _PlaceInfoPageState extends State<PlaceInfoPage> {
                                     icon: const Icon(Icons.facebook),
                                     color: Colors.black,
                                     onPressed: () {
-                                      String faceBook = widget.place.facebook;
+                                      String faceBook = widget.place.facebook!;
                                       _openFaceBook(faceBook);
                                     }),
                               ),

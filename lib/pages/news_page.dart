@@ -45,7 +45,7 @@ class _NewsPageState extends State<NewsPage> {
           onEmpty: EmptyWidget(AppLocalizations.of(context)!.emptyNewsBox),
           viewType: ViewType.list,
           itemBuilder: (context, documentSnapshots, index) {
-            NewsModel model = NewsModel.fromDocument(documentSnapshots);
+            NewsModel model = NewsModel.fromDocument(documentSnapshots[index]);
             return Column(
               children: [
                 AspectRatio(
@@ -79,6 +79,8 @@ class _NewsPageState extends State<NewsPage> {
                         child: SizedBox(
                             width: double.infinity,
                             child: Text(
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
                               model.description,
                             )),
                       ),

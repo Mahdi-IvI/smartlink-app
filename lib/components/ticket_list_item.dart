@@ -42,6 +42,8 @@ class TicketListItem extends StatelessWidget {
                   subtitle: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(ticket.description,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(color: Colors.white)),
                   ),
                 ),
